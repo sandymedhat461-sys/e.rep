@@ -4,9 +4,7 @@ use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\CompanyAuthController;
 use App\Http\Controllers\Auth\DoctorAuthController;
 use App\Http\Controllers\Auth\MedicalRepAuthController;
-use App\Http\Controllers\Admin\ActiveIngredientController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\DrugCategoryController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Doctor\CommentController;
 use App\Http\Controllers\Doctor\DoctorPointController;
@@ -73,16 +71,6 @@ Route::prefix('admin')->middleware('auth:admin-api')->group(function () {
     Route::post('/users/{type}/{id}/block', [UserManagementController::class, 'block']);
 
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
-
-    Route::get('/categories', [DrugCategoryController::class, 'index']);
-    Route::post('/categories', [DrugCategoryController::class, 'store']);
-    Route::put('/categories/{id}', [DrugCategoryController::class, 'update']);
-    Route::delete('/categories/{id}', [DrugCategoryController::class, 'destroy']);
-
-    Route::get('/ingredients', [ActiveIngredientController::class, 'index']);
-    Route::post('/ingredients', [ActiveIngredientController::class, 'store']);
-    Route::put('/ingredients/{id}', [ActiveIngredientController::class, 'update']);
-    Route::delete('/ingredients/{id}', [ActiveIngredientController::class, 'destroy']);
 });
 
 Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
