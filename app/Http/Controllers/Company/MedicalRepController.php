@@ -55,6 +55,8 @@ class MedicalRepController extends BaseCompanyController
             ['rep_id' => $rep->id, 'target_type' => $validated['target_type']],
             [
                 'target_value' => $validated['target_value'],
+                'period_start' => $validated['period_start'],
+                'period_end' => $validated['period_end'],
                 'period' => $validated['period_start'] . ' - ' . $validated['period_end'],
             ]
         );
@@ -70,12 +72,22 @@ class MedicalRepController extends BaseCompanyController
         }
 
         $targets = RepTarget::where('rep_id', $rep->id)->get()->map(function (RepTarget $target) {
-            [$start, $end] = array_pad(explode(' - ', (string) $target->period), 2, null);
+            $percentage = $target->target_value > 0
+                ? round(($target->current_value / $target->target_value) * 100, 2)
+                : 0;
+
+            $start = $target->period_start?->format('Y-m-d H:i:s');
+            $end = $target->period_end?->format('Y-m-d H:i:s');
+            if ($start === null && $target->period) {
+                [$start, $end] = array_pad(explode(' - ', (string) $target->period), 2, null);
+            }
+
             return [
                 'id' => $target->id,
                 'target_type' => $target->target_type,
                 'target_value' => $target->target_value,
                 'current_value' => $target->current_value,
+                'percentage' => $percentage,
                 'period_start' => $start,
                 'period_end' => $end,
             ];

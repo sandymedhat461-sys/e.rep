@@ -27,8 +27,11 @@ class RewardController extends BaseCompanyController
         }
 
         $validated = $this->validateRequest($request, [
-            'title' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
             'points_required' => ['required', 'integer', 'min:1'],
+            'quantity_available' => ['nullable', 'integer', 'min:0'],
+            'status' => ['nullable', 'in:active,inactive'],
         ]);
         if ($validated instanceof JsonResponse) {
             return $validated;
@@ -36,7 +39,12 @@ class RewardController extends BaseCompanyController
 
         $reward = Reward::create([
             'company_id' => $company->id,
-            ...$validated,
+            'name' => $validated['name'],
+            'title' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'points_required' => $validated['points_required'],
+            'quantity_available' => $validated['quantity_available'] ?? null,
+            'status' => $validated['status'] ?? 'active',
         ]);
 
         return $this->success(['reward' => $reward], null, 201);
@@ -49,7 +57,7 @@ class RewardController extends BaseCompanyController
             return $reward;
         }
 
-        $reward->loadCount('rewardRedemptions');
+        $reward->loadCount(['rewardRedemptions as redemptions_count']);
         return $this->success(['reward' => $reward]);
     }
 
@@ -61,14 +69,25 @@ class RewardController extends BaseCompanyController
         }
 
         $validated = $this->validateRequest($request, [
-            'title' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
             'points_required' => ['required', 'integer', 'min:1'],
+            'quantity_available' => ['nullable', 'integer', 'min:0'],
+            'status' => ['nullable', 'in:active,inactive'],
         ]);
         if ($validated instanceof JsonResponse) {
             return $validated;
         }
 
-        $reward->update($validated);
+        $reward->update([
+            'name' => $validated['name'],
+            'title' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'points_required' => $validated['points_required'],
+            'quantity_available' => $validated['quantity_available'] ?? null,
+            'status' => $validated['status'] ?? $reward->status,
+        ]);
+
         return $this->success(['reward' => $reward->fresh()]);
     }
 

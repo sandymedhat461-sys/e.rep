@@ -16,10 +16,13 @@ class NotificationController extends BaseMedicalRepController
             return $rep;
         }
 
-        $types = ['medical_rep', 'MedicalRep', MedicalRep::class, 'App\\Models\\MedicalRep'];
         $notifications = DB::table('notifications')
             ->where('notifiable_id', $rep->id)
-            ->whereIn('notifiable_type', $types)
+            ->where(function ($q) {
+                $q->where('notifiable_type', MedicalRep::class)
+                    ->orWhere('notifiable_type', 'medical_rep')
+                    ->orWhere('notifiable_type', 'MedicalRep');
+            })
             ->orderByDesc('created_at')
             ->get();
 
@@ -33,11 +36,14 @@ class NotificationController extends BaseMedicalRepController
             return $rep;
         }
 
-        $types = ['medical_rep', 'MedicalRep', MedicalRep::class, 'App\\Models\\MedicalRep'];
         $updated = DB::table('notifications')
             ->where('id', $id)
             ->where('notifiable_id', $rep->id)
-            ->whereIn('notifiable_type', $types)
+            ->where(function ($q) {
+                $q->where('notifiable_type', MedicalRep::class)
+                    ->orWhere('notifiable_type', 'medical_rep')
+                    ->orWhere('notifiable_type', 'MedicalRep');
+            })
             ->update(['read_at' => Carbon::now()]);
 
         if (!$updated) {
@@ -54,10 +60,13 @@ class NotificationController extends BaseMedicalRepController
             return $rep;
         }
 
-        $types = ['medical_rep', 'MedicalRep', MedicalRep::class, 'App\\Models\\MedicalRep'];
         DB::table('notifications')
             ->where('notifiable_id', $rep->id)
-            ->whereIn('notifiable_type', $types)
+            ->where(function ($q) {
+                $q->where('notifiable_type', MedicalRep::class)
+                    ->orWhere('notifiable_type', 'medical_rep')
+                    ->orWhere('notifiable_type', 'MedicalRep');
+            })
             ->whereNull('read_at')
             ->update(['read_at' => Carbon::now()]);
 

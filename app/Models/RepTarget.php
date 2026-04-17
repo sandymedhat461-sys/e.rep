@@ -15,6 +15,8 @@ class RepTarget extends Model
         'target_value',
         'current_value',
         'period',
+        'period_start',
+        'period_end',
     ];
 
     protected function casts(): array
@@ -22,6 +24,8 @@ class RepTarget extends Model
         return [
             'target_value' => 'integer',
             'current_value' => 'integer',
+            'period_start' => 'datetime',
+            'period_end' => 'datetime',
         ];
     }
 

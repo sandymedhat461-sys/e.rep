@@ -17,7 +17,10 @@ class PostController extends BaseMedicalRepController
             return $rep;
         }
 
-        $posts = Post::with('author')->orderByDesc('created_at')->paginate(15);
+        $posts = Post::with('author')
+            ->withCount(['comments', 'postLikes as likes_count'])
+            ->orderByDesc('created_at')
+            ->paginate(15);
         return $this->success(['posts' => $posts]);
     }
 
@@ -30,18 +33,21 @@ class PostController extends BaseMedicalRepController
 
         $validated = $this->validateRequest($request, [
             'title' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string'],
+            'content' => ['nullable', 'string', 'required_without:body'],
+            'body' => ['nullable', 'string', 'required_without:content'],
             'status' => ['nullable', 'in:published,draft'],
         ]);
         if ($validated instanceof JsonResponse) {
             return $validated;
         }
 
+        $text = $validated['body'] ?? $validated['content'];
+
         $post = Post::create([
             'author_type' => 'medical_rep',
             'author_id' => $rep->id,
             'title' => $validated['title'],
-            'content' => $validated['content'],
+            'content' => $text,
             'status' => $validated['status'] ?? 'published',
         ]);
 
@@ -50,7 +56,9 @@ class PostController extends BaseMedicalRepController
 
     public function show(int $id): JsonResponse
     {
-        $post = Post::with(['author', 'comments'])->withCount('postLikes as likes_count')->find($id);
+        $post = Post::with(['author', 'comments'])
+            ->withCount(['postLikes as likes_count'])
+            ->find($id);
         if (!$post) {
             return $this->error('Post not found', 404);
         }
@@ -74,14 +82,21 @@ class PostController extends BaseMedicalRepController
 
         $validated = $this->validateRequest($request, [
             'title' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string'],
+            'content' => ['nullable', 'string'],
+            'body' => ['nullable', 'string'],
             'status' => ['nullable', 'in:published,draft'],
         ]);
         if ($validated instanceof JsonResponse) {
             return $validated;
         }
 
-        $post->update($validated);
+        $text = $validated['body'] ?? $validated['content'] ?? $post->content;
+
+        $post->update([
+            'title' => $validated['title'],
+            'content' => $text,
+            'status' => $validated['status'] ?? $post->status,
+        ]);
         return $this->success(['post' => $post->fresh()]);
     }
 

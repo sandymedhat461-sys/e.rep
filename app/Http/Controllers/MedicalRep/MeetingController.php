@@ -8,6 +8,7 @@ use App\Models\RepDoctor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class MeetingController extends BaseMedicalRepController
 {
@@ -35,7 +36,7 @@ class MeetingController extends BaseMedicalRepController
         $validated = $this->validateRequest($request, [
             'doctor_id' => ['required', 'exists:doctors,id'],
             'scheduled_at' => ['required', 'date'],
-            'notes' => ['nullable', 'string'],
+            'notes' => ['nullable', 'string', 'max:5000'],
         ]);
         if ($validated instanceof JsonResponse) {
             return $validated;
@@ -50,7 +51,7 @@ class MeetingController extends BaseMedicalRepController
             'rep_id' => $rep->id,
             'doctor_id' => $validated['doctor_id'],
             'scheduled_at' => $validated['scheduled_at'],
-            'meeting_link' => $validated['notes'] ?? null,
+            'notes' => $validated['notes'] ?? null,
             'status' => 'scheduled',
         ]);
 
@@ -81,6 +82,7 @@ class MeetingController extends BaseMedicalRepController
                 'source' => 'meeting',
                 'source_id' => $meeting->id,
                 'value' => 10,
+                'description' => 'Meeting completed with rep',
             ]);
         });
 
@@ -99,6 +101,33 @@ class MeetingController extends BaseMedicalRepController
 
         $meeting->update(['status' => 'cancelled']);
         return $this->success(['meeting' => $meeting->fresh()], 'Meeting cancelled');
+    }
+
+    public function getVideoRoom(int $id): JsonResponse
+    {
+        $rep = $this->repOrForbidden();
+        if ($rep instanceof JsonResponse) {
+            return $rep;
+        }
+
+        $meeting = Meeting::where('id', $id)->where('rep_id', $rep->id)->first();
+        if (!$meeting) {
+            return $this->error('Meeting not found', 404);
+        }
+
+        if ($meeting->status !== 'scheduled') {
+            return $this->error('Meeting is not active', 403);
+        }
+
+        if (!$meeting->room_name) {
+            $roomName = 'erep-'.$meeting->id.'-'.Str::random(10);
+            $meeting->update(['room_name' => $roomName]);
+        }
+
+        return $this->success([
+            'room_url' => 'https://meet.jit.si/'.$meeting->room_name,
+            'room_name' => $meeting->room_name,
+        ]);
     }
 
     private function ownedMeeting(int $id): Meeting|JsonResponse

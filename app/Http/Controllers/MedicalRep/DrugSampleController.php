@@ -15,7 +15,7 @@ class DrugSampleController extends BaseMedicalRepController
         }
 
         $samples = DrugSample::where('rep_id', $rep->id)
-            ->with(['doctor:id,full_name,email', 'drug:id,market_name'])
+            ->with(['doctor:id,full_name,email', 'drug:id,name,market_name'])
             ->latest()
             ->get();
         return $this->success(['samples' => $samples]);
@@ -28,7 +28,7 @@ class DrugSampleController extends BaseMedicalRepController
             return $sample;
         }
 
-        return $this->success(['sample' => $sample->load(['doctor:id,full_name,email', 'drug:id,market_name'])]);
+        return $this->success(['sample' => $sample->load(['doctor:id,full_name,email', 'drug:id,name,market_name'])]);
     }
 
     public function approve(int $id): JsonResponse

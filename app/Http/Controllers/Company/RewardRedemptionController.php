@@ -30,7 +30,7 @@ class RewardRedemptionController extends BaseCompanyController
             return $redemption;
         }
 
-        $redemption->update(['status' => 'delivered']);
+        $redemption->update(['status' => 'fulfilled']);
         return $this->success(['redemption' => $redemption->fresh()]);
     }
 
@@ -41,7 +41,7 @@ class RewardRedemptionController extends BaseCompanyController
             return $redemption;
         }
 
-        $redemption->update(['status' => 'rejected']);
+        $redemption->update(['status' => 'cancelled']);
         return $this->success(['redemption' => $redemption->fresh()]);
     }
 

@@ -13,13 +13,19 @@ class Reward extends Model
     protected $fillable = [
         'company_id',
         'title',
+        'name',
+        'description',
         'points_required',
+        'quantity_available',
+        'status',
     ];
 
     protected function casts(): array
     {
         return [
             'points_required' => 'integer',
+            'quantity_available' => 'integer',
+            'status' => 'string',
         ];
     }
 

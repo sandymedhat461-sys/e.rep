@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\CompanyAuthController;
 use App\Http\Controllers\Auth\DoctorAuthController;
 use App\Http\Controllers\Auth\MedicalRepAuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DrugCategoryController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Doctor\CommentController;
 use App\Http\Controllers\Doctor\DoctorPointController;
@@ -32,6 +33,9 @@ use App\Http\Controllers\Company\NotificationController as CompanyNotificationCo
 use App\Http\Controllers\Company\PostController as CompanyPostController;
 use App\Http\Controllers\Company\RewardController as CompanyRewardController;
 use App\Http\Controllers\Company\RewardRedemptionController as CompanyRewardRedemptionController;
+use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
+use App\Http\Controllers\Company\MessageController as CompanyMessageController;
+use App\Http\Controllers\Doctor\ReportController;
 use App\Http\Controllers\MedicalRep\AssignedDoctorController;
 use App\Http\Controllers\MedicalRep\DrugController as MedicalRepDrugController;
 use App\Http\Controllers\MedicalRep\DrugSampleController as MedicalRepDrugSampleController;
@@ -41,6 +45,7 @@ use App\Http\Controllers\MedicalRep\MessageController as MedicalRepMessageContro
 use App\Http\Controllers\MedicalRep\NotificationController as MedicalRepNotificationController;
 use App\Http\Controllers\MedicalRep\PostController as MedicalRepPostController;
 use App\Http\Controllers\MedicalRep\TargetController as MedicalRepTargetController;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -55,6 +60,7 @@ Route::prefix('auth')->group(function () {
     Route::get('/company/me', [CompanyAuthController::class, 'me'])->middleware('auth:company-api');
 
     Route::post('/doctor/register', [DoctorAuthController::class, 'register']);
+    Route::post('/doctor/check-syndicate', [DoctorAuthController::class, 'checkSyndicateId']);
     Route::post('/doctor/login', [DoctorAuthController::class, 'login']);
     Route::post('/doctor/logout', [DoctorAuthController::class, 'logout'])->middleware('auth:doctor-api');
     Route::get('/doctor/me', [DoctorAuthController::class, 'me'])->middleware('auth:doctor-api');
@@ -71,6 +77,11 @@ Route::prefix('admin')->middleware('auth:admin-api')->group(function () {
     Route::post('/users/{type}/{id}/block', [UserManagementController::class, 'block']);
 
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+
+    Route::get('/categories', [DrugCategoryController::class, 'index']);
+    Route::post('/categories', [DrugCategoryController::class, 'store']);
+    Route::put('/categories/{id}', [DrugCategoryController::class, 'update']);
+    Route::delete('/categories/{id}', [DrugCategoryController::class, 'destroy']);
 });
 
 Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
@@ -89,6 +100,9 @@ Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
 
     Route::get('/meetings', [MeetingController::class, 'index']);
     Route::get('/meetings/{id}', [MeetingController::class, 'show']);
+    Route::get('/meetings/{id}/video-room', [MeetingController::class, 'getVideoRoom']);
+
+    Route::get('/report/generate', [ReportController::class, 'generate']);
 
     Route::get('/events', [EventController::class, 'index']);
     Route::get('/events/{id}', [EventController::class, 'show']);
@@ -130,6 +144,12 @@ Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
 });
 
 Route::prefix('company')->middleware('auth:company-api')->group(function () {
+    Route::get('/dashboard', [CompanyDashboardController::class, 'index']);
+
+    Route::get('/messages', [CompanyMessageController::class, 'index']);
+    Route::post('/messages', [CompanyMessageController::class, 'store']);
+    Route::post('/messages/{id}/read', [CompanyMessageController::class, 'markAsRead']);
+
     Route::get('/ingredients', [CompanyActiveIngredientController::class, 'index']);
     Route::post('/ingredients', [CompanyActiveIngredientController::class, 'store']);
     Route::put('/ingredients/{id}', [CompanyActiveIngredientController::class, 'update']);
@@ -193,6 +213,7 @@ Route::prefix('rep')->middleware('auth:rep-api')->group(function () {
     Route::get('/meetings/{id}', [MedicalRepMeetingController::class, 'show']);
     Route::post('/meetings/{id}/complete', [MedicalRepMeetingController::class, 'complete']);
     Route::post('/meetings/{id}/cancel', [MedicalRepMeetingController::class, 'cancel']);
+    Route::get('/meetings/{id}/video-room', [MedicalRepMeetingController::class, 'getVideoRoom']);
 
     Route::get('/samples', [MedicalRepDrugSampleController::class, 'index']);
     Route::get('/samples/{id}', [MedicalRepDrugSampleController::class, 'show']);
@@ -226,3 +247,5 @@ Route::prefix('rep')->middleware('auth:rep-api')->group(function () {
     Route::post('/notifications/{id}/read', [MedicalRepNotificationController::class, 'markAsRead']);
     Route::post('/notifications/read-all', [MedicalRepNotificationController::class, 'markAllAsRead']);
 });
+
+Broadcast::routes(['middleware' => ['auth:sanctum']]);

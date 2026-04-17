@@ -16,10 +16,17 @@ class TargetController extends BaseMedicalRepController
 
         $targets = RepTarget::where('rep_id', $rep->id)->get()->map(function (RepTarget $target) {
             $percentage = $target->target_value > 0
-                ? round(($target->current_value / $target->target_value) * 100, 2)
-                : 0;
+                ? round(($target->current_value / $target->target_value) * 100, 1)
+                : 0.0;
 
-            [$start, $end] = array_pad(explode(' - ', (string) $target->period), 2, null);
+            $start = $target->period_start;
+            $end = $target->period_end;
+            if (!$start && !$end && $target->period) {
+                [$pStart, $pEnd] = array_pad(explode(' - ', (string) $target->period), 2, null);
+                $start = $start ?? $pStart;
+                $end = $end ?? $pEnd;
+            }
+
             return [
                 'target_type' => $target->target_type,
                 'target_value' => $target->target_value,

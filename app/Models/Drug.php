@@ -14,18 +14,21 @@ class Drug extends Model
     protected $fillable = [
         'company_id',
         'category_id',
+        'name',
         'market_name',
         'description',
         'price',
         'dosage',
         'side_effects',
         'image',
+        'status',
     ];
 
     protected function casts(): array
     {
         return [
             'price' => 'decimal:2',
+            'status' => 'string',
         ];
     }
 

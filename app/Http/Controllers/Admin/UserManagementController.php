@@ -34,7 +34,11 @@ class UserManagementController extends Controller
                 ], 404);
             }
 
-            $user->status = 'active';
+            if ($user instanceof Company) {
+                $user->status = 'approved';
+            } else {
+                $user->status = 'active';
+            }
             $user->save();
 
             return response()->json([

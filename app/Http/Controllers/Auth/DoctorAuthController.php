@@ -22,7 +22,7 @@ class DoctorAuthController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'specialization' => ['required', 'string', 'max:100'],
             'hospital_name' => ['required', 'string', 'max:255'],
-            'syndicate_id' => ['required', 'string', 'max:50'],
+            'syndicate_id' => ['required', 'string', 'unique:doctors,syndicate_id', 'min:5', 'max:20'],
             'profile_image' => ['nullable', 'image', 'max:2048'],
             'syndicate_id_image' => ['required', 'image', 'max:2048'],
         ]);
@@ -138,6 +138,30 @@ class DoctorAuthController extends Controller
             'success' => true,
             'data' => [
                 'doctor' => $request->user(),
+            ],
+        ]);
+    }
+
+    public function checkSyndicateId(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'syndicate_id' => ['required', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $exists = Doctor::where('syndicate_id', $request->syndicate_id)->exists();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'available' => !$exists,
             ],
         ]);
     }

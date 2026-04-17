@@ -102,6 +102,13 @@ class CompanyAuthController extends Controller
                 ], 403);
             }
 
+            if ($company->status !== 'approved') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Company account is not approved',
+                ], 403);
+            }
+
             $token = $company->createToken('company-token')->plainTextToken;
 
             return response()->json([

@@ -1,26 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\MedicalRep;
+namespace App\Http\Controllers\Company;
 
 use App\Events\MessageSent;
+use App\Models\Company;
 use App\Models\Doctor;
 use App\Models\MedicalRep;
 use App\Models\Message;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class MessageController extends BaseMedicalRepController
+class MessageController extends BaseCompanyController
 {
     public function index(): JsonResponse
     {
-        $rep = $this->repOrForbidden();
-        if ($rep instanceof JsonResponse) {
-            return $rep;
+        $company = $this->companyOrForbidden();
+        if ($company instanceof JsonResponse) {
+            return $company;
         }
 
         $messages = Message::query()
-            ->where('receiver_id', $rep->id)
-            ->where('receiver_type', MedicalRep::class)
+            ->where('receiver_id', $company->id)
+            ->where('receiver_type', Company::class)
             ->with('sender')
             ->orderByDesc('created_at')
             ->get();
@@ -30,33 +31,39 @@ class MessageController extends BaseMedicalRepController
 
     public function store(Request $request): JsonResponse
     {
-        $rep = $this->repOrForbidden();
-        if ($rep instanceof JsonResponse) {
-            return $rep;
+        $company = $this->companyOrForbidden();
+        if ($company instanceof JsonResponse) {
+            return $company;
         }
 
         $validated = $this->validateRequest($request, [
             'receiver_id' => ['required', 'integer'],
-            'receiver_type' => ['required', 'in:doctor,company'],
+            'receiver_type' => ['required', 'in:doctor,medical_rep'],
             'body' => ['required', 'string'],
         ]);
         if ($validated instanceof JsonResponse) {
             return $validated;
         }
 
-        if ($validated['receiver_type'] === 'company') {
-            return $this->error('Messaging company is not supported for reps', 422);
-        }
+        $receiverClass = match ($validated['receiver_type']) {
+            'doctor' => Doctor::class,
+            'medical_rep' => MedicalRep::class,
+            default => null,
+        };
 
-        if (!Doctor::whereKey($validated['receiver_id'])->exists()) {
-            return $this->error('Doctor not found', 404);
+        if ($receiverClass === Doctor::class) {
+            if (!Doctor::whereKey($validated['receiver_id'])->exists()) {
+                return $this->error('Receiver not found', 404);
+            }
+        } elseif (!MedicalRep::whereKey($validated['receiver_id'])->where('company_id', $company->id)->exists()) {
+            return $this->error('Receiver not found', 404);
         }
 
         $message = Message::create([
-            'sender_type' => 'rep',
-            'sender_id' => $rep->id,
+            'sender_type' => Company::class,
+            'sender_id' => $company->id,
             'receiver_id' => $validated['receiver_id'],
-            'receiver_type' => Doctor::class,
+            'receiver_type' => $receiverClass,
             'body' => $validated['body'],
             'is_read' => false,
         ]);
@@ -69,16 +76,17 @@ class MessageController extends BaseMedicalRepController
 
     public function markAsRead(int $id): JsonResponse
     {
-        $rep = $this->repOrForbidden();
-        if ($rep instanceof JsonResponse) {
-            return $rep;
+        $company = $this->companyOrForbidden();
+        if ($company instanceof JsonResponse) {
+            return $company;
         }
 
         $message = Message::query()
             ->where('id', $id)
-            ->where('receiver_id', $rep->id)
-            ->where('receiver_type', MedicalRep::class)
+            ->where('receiver_id', $company->id)
+            ->where('receiver_type', Company::class)
             ->first();
+
         if (!$message) {
             return $this->error('Message not found', 404);
         }

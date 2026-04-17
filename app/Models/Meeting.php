@@ -14,6 +14,8 @@ class Meeting extends Model
         'rep_id',
         'status',
         'meeting_link',
+        'notes',
+        'room_name',
         'scheduled_at',
         'points_awarded',
     ];

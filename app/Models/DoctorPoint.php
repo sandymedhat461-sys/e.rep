@@ -14,6 +14,7 @@ class DoctorPoint extends Model
         'source',
         'source_id',
         'value',
+        'description',
     ];
 
     protected function casts(): array

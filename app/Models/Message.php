@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Message extends Model
 {
@@ -12,26 +12,26 @@ class Message extends Model
     protected $fillable = [
         'sender_type',
         'sender_id',
-        'receiver_doctor_id',
-        'receiver_rep_id',
-        'content',
-        'read_status',
+        'receiver_id',
+        'receiver_type',
+        'body',
+        'is_read',
     ];
 
     protected function casts(): array
     {
         return [
-            'read_status' => 'boolean',
+            'is_read' => 'boolean',
         ];
     }
 
-    public function receiverDoctor(): BelongsTo
+    public function sender(): MorphTo
     {
-        return $this->belongsTo(Doctor::class, 'receiver_doctor_id');
+        return $this->morphTo();
     }
 
-    public function receiverRep(): BelongsTo
+    public function receiver(): MorphTo
     {
-        return $this->belongsTo(MedicalRep::class, 'receiver_rep_id');
+        return $this->morphTo();
     }
 }

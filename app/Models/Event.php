@@ -17,6 +17,8 @@ class Event extends Model
         'location',
         'event_date',
         'points_required',
+        'max_capacity',
+        'status',
     ];
 
     protected function casts(): array
@@ -24,6 +26,8 @@ class Event extends Model
         return [
             'event_date' => 'datetime',
             'points_required' => 'integer',
+            'max_capacity' => 'integer',
+            'status' => 'string',
         ];
     }
 
