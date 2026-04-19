@@ -9,6 +9,7 @@ REST API for the E-Rep (medical rep / doctor / company) platform. All JSON bodie
 | Environment | Base URL |
 |-------------|----------|
 | Local (default) | `http://localhost:8000` |
+|swagger (public)| `https://embezzle-skedaddle-creatable.ngrok-free.dev`| 
 | API prefix | `/api` |
 
 **Example:** Login URL = `{base}/api/auth/doctor/login` → `http://localhost:8000/api/auth/doctor/login`
