@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventInvitation;
+use App\Models\DoctorPoint;
+use App\Models\Event;
 use App\Models\EventRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -34,6 +36,21 @@ class EventRequestController extends Controller
 
         $doctorId = (int) $request->user()->id;
         $eventId = (int) $validated['event_id'];
+
+        $event = Event::find($eventId);
+        if (!$event) {
+            return $this->error('Event not found', 404);
+        }
+
+        if ($event->points_required) {
+            $totalPoints = DoctorPoint::where('doctor_id', $doctorId)->sum('value');
+            if ($totalPoints < $event->points_required) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Insufficient points to attend this event. Required: '.$event->points_required,
+                ], 422);
+            }
+        }
 
         $alreadyRequested = EventRequest::where('doctor_id', $doctorId)->where('event_id', $eventId)->exists();
         if ($alreadyRequested) {

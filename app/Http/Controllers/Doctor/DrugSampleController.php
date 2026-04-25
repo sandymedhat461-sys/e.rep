@@ -51,6 +51,7 @@ class DrugSampleController extends Controller
             'rep_id' => $assignment->rep_id,
             'quantity' => $validated['quantity'],
             'status' => 'pending',
+            'requested_at' => now(),
         ]);
 
         return $this->success(['sample' => $sample], null, 201);

@@ -56,7 +56,7 @@ class EventInvitationController extends BaseMedicalRepController
 
         $invitation = EventInvitation::firstOrCreate(
             ['event_id' => $event->id, 'doctor_id' => $validated['doctor_id']],
-            ['invited_by_rep_id' => $rep->id, 'status' => 'pending']
+            ['invited_by_rep_id' => $rep->id, 'status' => 'pending', 'invited_at' => now()]
         );
 
         return $this->success(['invitation' => $invitation], null, 201);

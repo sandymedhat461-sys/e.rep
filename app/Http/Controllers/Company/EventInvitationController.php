@@ -31,7 +31,7 @@ class EventInvitationController extends BaseCompanyController
         foreach ($doctorIds as $doctorId) {
             $created[] = EventInvitation::firstOrCreate(
                 ['event_id' => $event->id, 'doctor_id' => $doctorId],
-                ['status' => 'pending']
+                ['status' => 'pending', 'invited_at' => now()]
             );
         }
 

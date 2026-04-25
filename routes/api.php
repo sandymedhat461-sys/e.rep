@@ -181,6 +181,9 @@ Route::prefix('company')->middleware('auth:company-api')->group(function () {
     Route::delete('/rewards/{id}', [CompanyRewardController::class, 'destroy']);
 
     Route::get('/redemptions', [CompanyRewardRedemptionController::class, 'index']);
+    Route::post('/redemptions/{id}/approve', [CompanyRewardRedemptionController::class, 'approve']);
+    Route::post('/redemptions/{id}/reject', [CompanyRewardRedemptionController::class, 'reject']);
+    Route::post('/redemptions/{id}/deliver', [CompanyRewardRedemptionController::class, 'deliver']);
     Route::post('/redemptions/{id}/fulfill', [CompanyRewardRedemptionController::class, 'fulfill']);
     Route::post('/redemptions/{id}/cancel', [CompanyRewardRedemptionController::class, 'cancel']);
 

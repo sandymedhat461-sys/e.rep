@@ -48,7 +48,7 @@ class DashboardController extends BaseCompanyController
             ->all();
 
         $repsTotal = MedicalRep::where('company_id', $companyId)->count();
-        $repsApproved = MedicalRep::where('company_id', $companyId)->whereIn('status', ['approved', 'active'])->count();
+        $repsApproved = MedicalRep::where('company_id', $companyId)->where('status', 'active')->count();
         $repsPending = MedicalRep::where('company_id', $companyId)->where('status', 'pending')->count();
 
         $eventsTotal = Event::where('company_id', $companyId)->count();

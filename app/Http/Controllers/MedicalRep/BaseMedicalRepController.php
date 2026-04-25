@@ -15,8 +15,8 @@ abstract class BaseMedicalRepController extends Controller
             return $this->error('Unauthenticated', 401);
         }
 
-        if (!in_array((string) $rep->status, ['approved', 'active'], true)) {
-            return $this->error('Rep account is not approved', 403);
+        if ((string) $rep->status !== 'active') {
+            return $this->error('Rep account is not active', 403);
         }
 
         return $rep;

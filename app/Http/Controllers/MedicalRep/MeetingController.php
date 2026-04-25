@@ -81,7 +81,7 @@ class MeetingController extends BaseMedicalRepController
         }
 
         $point = DB::transaction(function () use ($meeting) {
-            $meeting->update(['status' => 'completed']);
+            $meeting->update(['status' => 'completed', 'points_awarded' => 10]);
 
             return DoctorPoint::create([
                 'doctor_id' => $meeting->doctor_id,

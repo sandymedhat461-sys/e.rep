@@ -24,6 +24,39 @@ class RewardRedemptionController extends BaseCompanyController
         return $this->success(['redemptions' => $redemptions]);
     }
 
+    public function approve(int $id): JsonResponse
+    {
+        $redemption = $this->ownedRedemption($id);
+        if ($redemption instanceof JsonResponse) {
+            return $redemption;
+        }
+
+        $redemption->update(['status' => 'approved']);
+        return $this->success(['redemption' => $redemption->fresh()]);
+    }
+
+    public function reject(int $id): JsonResponse
+    {
+        $redemption = $this->ownedRedemption($id);
+        if ($redemption instanceof JsonResponse) {
+            return $redemption;
+        }
+
+        $redemption->update(['status' => 'rejected']);
+        return $this->success(['redemption' => $redemption->fresh()]);
+    }
+
+    public function deliver(int $id): JsonResponse
+    {
+        $redemption = $this->ownedRedemption($id);
+        if ($redemption instanceof JsonResponse) {
+            return $redemption;
+        }
+
+        $redemption->update(['status' => 'delivered']);
+        return $this->success(['redemption' => $redemption->fresh()]);
+    }
+
     
     public function fulfill(int $id): JsonResponse
     {
