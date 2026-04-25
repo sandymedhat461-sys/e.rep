@@ -10,16 +10,7 @@ use Illuminate\Http\Request;
 
 class PostController extends BaseCompanyController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/company/posts",
-     *     tags={"Company - Posts"},
-     *     summary="List posts (paginated)",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function index(): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -31,24 +22,7 @@ class PostController extends BaseCompanyController
         return $this->success(['posts' => $posts]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/posts",
-     *     tags={"Company - Posts"},
-     *     summary="Create post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="title", type="string"),
-     *             @OA\Property(property="content", type="string"),
-     *             @OA\Property(property="status", type="string", enum={"published","draft"})
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function store(Request $request): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -76,18 +50,7 @@ class PostController extends BaseCompanyController
         return $this->success(['post' => $post], null, 201);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/company/posts/{id}",
-     *     tags={"Company - Posts"},
-     *     summary="Get post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function show(int $id): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -102,26 +65,7 @@ class PostController extends BaseCompanyController
         return $this->success(['post' => $post]);
     }
 
-    /**
-     * @OA\Put(
-     *     path="/api/company/posts/{id}",
-     *     tags={"Company - Posts"},
-     *     summary="Update post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="title", type="string"),
-     *             @OA\Property(property="content", type="string"),
-     *             @OA\Property(property="status", type="string", enum={"published","draft"})
-     *         )
-     *     ),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=403, description="Forbidden"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function update(Request $request, int $id): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -150,19 +94,7 @@ class PostController extends BaseCompanyController
         return $this->success(['post' => $post->fresh()]);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/company/posts/{id}",
-     *     tags={"Company - Posts"},
-     *     summary="Delete post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=403, description="Forbidden"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function destroy(int $id): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -182,23 +114,7 @@ class PostController extends BaseCompanyController
         return $this->success([], 'Post deleted');
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/posts/{postId}/comments",
-     *     tags={"Company - Posts"},
-     *     summary="Add comment on post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="postId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="comment_text", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=404, description="Post not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function storeComment(Request $request, int $postId): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -228,19 +144,7 @@ class PostController extends BaseCompanyController
         return $this->success(['comment' => $comment], null, 201);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/company/comments/{id}",
-     *     tags={"Company - Posts"},
-     *     summary="Delete own comment",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=403, description="Forbidden"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function destroyComment(int $id): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -262,19 +166,7 @@ class PostController extends BaseCompanyController
         return $this->success([], 'Comment deleted');
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/posts/{postId}/like",
-     *     tags={"Company - Posts"},
-     *     summary="Like post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="postId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Already liked"),
-     *     @OA\Response(response=404, description="Post not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function like(int $postId): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -301,18 +193,7 @@ class PostController extends BaseCompanyController
         return $this->success([], 'Post liked', 201);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/company/posts/{postId}/unlike",
-     *     tags={"Company - Posts"},
-     *     summary="Unlike post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="postId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Like not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function unlike(int $postId): JsonResponse
     {
         $company = $this->companyOrForbidden();

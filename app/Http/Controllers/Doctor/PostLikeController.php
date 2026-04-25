@@ -10,19 +10,7 @@ use Illuminate\Http\Request;
 
 class PostLikeController extends Controller
 {
-    /**
-     * @OA\Post(
-     *     path="/api/doctor/posts/{postId}/like",
-     *     tags={"Doctor - Posts"},
-     *     summary="Like post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="postId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Already liked"),
-     *     @OA\Response(response=404, description="Post not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function store(Request $request, int $postId): JsonResponse
     {
         $post = Post::find($postId);
@@ -50,18 +38,7 @@ class PostLikeController extends Controller
         return $this->success([], 'Post liked', 201);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/doctor/posts/{postId}/unlike",
-     *     tags={"Doctor - Posts"},
-     *     summary="Unlike post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="postId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Like not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+ 
     public function destroy(Request $request, int $postId): JsonResponse
     {
         $like = PostLike::where('post_id', $postId)

@@ -10,24 +10,7 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * @OA\Post(
-     *     path="/api/doctor/posts/{postId}/comments",
-     *     tags={"Doctor - Posts"},
-     *     summary="Add comment",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="postId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="comment_text", type="string"),
-     *             @OA\Property(property="parent_comment_id", type="integer", description="Optional reply-to comment id")
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=404, description="Post not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function store(Request $request, int $postId): JsonResponse
     {
         $post = Post::find($postId);
@@ -56,19 +39,7 @@ class CommentController extends Controller
         return $this->success(['comment' => $comment], null, 201);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/doctor/comments/{id}",
-     *     tags={"Doctor - Posts"},
-     *     summary="Delete own comment",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=403, description="Forbidden"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function destroy(Request $request, int $id): JsonResponse
     {
         $comment = Comment::find($id);

@@ -13,23 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ReportController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/report/generate",
-     *     tags={"Doctor - Report"},
-     *     summary="Download PDF activity report",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(
-     *         response=200,
-     *         description="PDF binary stream",
-     *         @OA\MediaType(
-     *             mediaType="application/pdf",
-     *             @OA\Schema(type="string", format="binary")
-     *         )
-     *     ),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function generate(): Response
     {
         $doctor = auth('doctor-api')->user();

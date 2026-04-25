@@ -10,16 +10,7 @@ use Illuminate\Http\Request;
 
 class EventRequestController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/event-requests",
-     *     tags={"Doctor - Events"},
-     *     summary="List my event requests",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function index(Request $request): JsonResponse
     {
         $requests = EventRequest::query()
@@ -31,22 +22,7 @@ class EventRequestController extends Controller
         return $this->success(['requests' => $requests]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/doctor/event-requests",
-     *     tags={"Doctor - Events"},
-     *     summary="Request to attend event",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="event_id", type="integer")
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Already registered"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function store(Request $request): JsonResponse
     {
         $validated = $this->validateRequest($request, [

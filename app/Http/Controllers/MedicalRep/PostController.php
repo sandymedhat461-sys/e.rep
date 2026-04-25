@@ -10,16 +10,7 @@ use Illuminate\Http\Request;
 
 class PostController extends BaseMedicalRepController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/rep/posts",
-     *     tags={"Rep - Posts"},
-     *     summary="List posts",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function index(): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -34,24 +25,7 @@ class PostController extends BaseMedicalRepController
         return $this->success(['posts' => $posts]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/rep/posts",
-     *     tags={"Rep - Posts"},
-     *     summary="Create post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="title", type="string"),
-     *             @OA\Property(property="content", type="string"),
-     *             @OA\Property(property="status", type="string", enum={"published","draft"})
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function store(Request $request): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -79,18 +53,7 @@ class PostController extends BaseMedicalRepController
         return $this->success(['post' => $post], null, 201);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/rep/posts/{id}",
-     *     tags={"Rep - Posts"},
-     *     summary="Get post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function show(int $id): JsonResponse
     {
         $post = Post::with(['author', 'comments'])
@@ -102,26 +65,7 @@ class PostController extends BaseMedicalRepController
         return $this->success(['post' => $post]);
     }
 
-    /**
-     * @OA\Put(
-     *     path="/api/rep/posts/{id}",
-     *     tags={"Rep - Posts"},
-     *     summary="Update own post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="title", type="string"),
-     *             @OA\Property(property="content", type="string"),
-     *             @OA\Property(property="status", type="string", enum={"published","draft"})
-     *         )
-     *     ),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=403, description="Forbidden"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function update(Request $request, int $id): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -156,19 +100,8 @@ class PostController extends BaseMedicalRepController
         return $this->success(['post' => $post->fresh()]);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/rep/posts/{id}",
-     *     tags={"Rep - Posts"},
-     *     summary="Delete own post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=403, description="Forbidden"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
+  
     public function destroy(int $id): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -188,23 +121,7 @@ class PostController extends BaseMedicalRepController
         return $this->success([], 'Post deleted');
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/rep/posts/{postId}/comments",
-     *     tags={"Rep - Posts"},
-     *     summary="Add comment",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="postId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="comment_text", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=404, description="Post not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function storeComment(Request $request, int $postId): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -234,19 +151,7 @@ class PostController extends BaseMedicalRepController
         return $this->success(['comment' => $comment], null, 201);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/rep/comments/{id}",
-     *     tags={"Rep - Posts"},
-     *     summary="Delete own comment",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=403, description="Forbidden"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function destroyComment(int $id): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -268,19 +173,7 @@ class PostController extends BaseMedicalRepController
         return $this->success([], 'Comment deleted');
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/rep/posts/{postId}/like",
-     *     tags={"Rep - Posts"},
-     *     summary="Like post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="postId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Already liked"),
-     *     @OA\Response(response=404, description="Post not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function like(int $postId): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -307,18 +200,7 @@ class PostController extends BaseMedicalRepController
         return $this->success([], 'Post liked', 201);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/rep/posts/{postId}/unlike",
-     *     tags={"Rep - Posts"},
-     *     summary="Unlike post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="postId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Like not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function unlike(int $postId): JsonResponse
     {
         $rep = $this->repOrForbidden();

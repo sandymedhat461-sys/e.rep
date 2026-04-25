@@ -8,16 +8,7 @@ use Illuminate\Http\JsonResponse;
 
 class AssignedDoctorController extends BaseMedicalRepController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/rep/doctors",
-     *     tags={"Rep - Doctors"},
-     *     summary="List assigned doctors",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function index(): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -29,18 +20,7 @@ class AssignedDoctorController extends BaseMedicalRepController
         return $this->success(['doctors' => $doctors]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/rep/doctors/{id}",
-     *     tags={"Rep - Doctors"},
-     *     summary="Get assigned doctor",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function show(int $id): JsonResponse
     {
         $rep = $this->repOrForbidden();

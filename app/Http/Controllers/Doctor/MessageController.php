@@ -12,16 +12,7 @@ use Illuminate\Http\Request;
 
 class MessageController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/messages",
-     *     tags={"Doctor - Messages"},
-     *     summary="List messages",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function index(Request $request): JsonResponse
     {
         $doctorId = (int) $request->user()->id;
@@ -40,23 +31,7 @@ class MessageController extends Controller
         return $this->success(['messages' => $messages]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/doctor/messages",
-     *     tags={"Doctor - Messages"},
-     *     summary="Send message to medical rep",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="receiver_rep_id", type="integer"),
-     *             @OA\Property(property="content", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function store(Request $request): JsonResponse
     {
         $validated = $this->validateRequest($request, [
@@ -82,18 +57,7 @@ class MessageController extends Controller
         return $this->success(['message' => $message], null, 201);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/doctor/messages/{id}/read",
-     *     tags={"Doctor - Messages"},
-     *     summary="Mark message as read",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function markAsRead(Request $request, int $id): JsonResponse
     {
         $message = Message::where('id', $id)

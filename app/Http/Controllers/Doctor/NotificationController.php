@@ -11,16 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class NotificationController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/notifications",
-     *     tags={"Doctor - Messages"},
-     *     summary="List notifications",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function index(Request $request): JsonResponse
     {
         $doctorId = (int) $request->user()->id;
@@ -59,16 +50,7 @@ class NotificationController extends Controller
         return $this->success([], 'Marked as read');
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/doctor/notifications/read-all",
-     *     tags={"Doctor - Messages"},
-     *     summary="Mark all notifications as read",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function markAllAsRead(Request $request): JsonResponse
     {
         $doctorTypes = ['doctor', 'Doctor', Doctor::class, 'App\\Models\\Doctor'];

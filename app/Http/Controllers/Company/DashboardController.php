@@ -17,17 +17,6 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends BaseCompanyController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/company/dashboard",
-     *     tags={"Company - Drugs"},
-     *     summary="Company dashboard analytics",
-     *     description="Aggregated stats: drugs, reps, events, samples, rewards, rep performance",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
     public function index(): JsonResponse
     {
         $company = $this->companyOrForbidden();

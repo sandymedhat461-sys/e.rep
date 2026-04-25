@@ -7,16 +7,7 @@ use Illuminate\Http\JsonResponse;
 
 class TargetController extends BaseMedicalRepController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/rep/targets",
-     *     tags={"Rep - Drugs"},
-     *     summary="List rep targets with progress",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function index(): JsonResponse
     {
         $rep = $this->repOrForbidden();

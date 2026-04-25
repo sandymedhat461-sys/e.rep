@@ -9,16 +9,7 @@ use Illuminate\Http\Request;
 
 class FavoriteController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/favorites",
-     *     tags={"Doctor - Drugs"},
-     *     summary="List favorite drugs",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function index(Request $request): JsonResponse
     {
         $favorites = Favorite::query()
@@ -30,22 +21,7 @@ class FavoriteController extends Controller
         return $this->success(['favorites' => $favorites]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/doctor/favorites",
-     *     tags={"Doctor - Drugs"},
-     *     summary="Add drug to favorites",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="drug_id", type="integer")
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Already in favorites"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function store(Request $request): JsonResponse
     {
         $validated = $this->validateRequest($request, [
@@ -72,18 +48,7 @@ class FavoriteController extends Controller
         return $this->success([], 'Added to favorites', 201);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/doctor/favorites/{drugId}",
-     *     tags={"Doctor - Drugs"},
-     *     summary="Remove favorite",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="drugId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function destroy(Request $request, int $drugId): JsonResponse
     {
         $favorite = Favorite::where('doctor_id', $request->user()->id)

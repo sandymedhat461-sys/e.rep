@@ -12,16 +12,7 @@ use Illuminate\Http\Request;
 
 class MessageController extends BaseCompanyController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/company/messages",
-     *     tags={"Company - Messages"},
-     *     summary="List received messages",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function index(): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -39,25 +30,7 @@ class MessageController extends BaseCompanyController
         return $this->success(['messages' => $messages]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/messages",
-     *     tags={"Company - Messages"},
-     *     summary="Send message to doctor or rep",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="receiver_id", type="integer"),
-     *             @OA\Property(property="receiver_type", type="string", enum={"doctor","medical_rep"}),
-     *             @OA\Property(property="body", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=404, description="Receiver not found"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function store(Request $request): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -103,18 +76,7 @@ class MessageController extends BaseCompanyController
         return $this->success(['message' => $message], null, 201);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/messages/{id}/read",
-     *     tags={"Company - Messages"},
-     *     summary="Mark message as read",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function markAsRead(int $id): JsonResponse
     {
         $company = $this->companyOrForbidden();

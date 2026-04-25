@@ -10,17 +10,7 @@ use Illuminate\Support\Str;
 
 class MeetingController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/meetings",
-     *     tags={"Doctor - Meetings"},
-     *     summary="List meetings",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="status", in="query", @OA\Schema(type="string")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function index(Request $request): JsonResponse
     {
         $query = Meeting::query()
@@ -34,18 +24,7 @@ class MeetingController extends Controller
         return $this->success(['meetings' => $query->latest()->get()]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/meetings/{id}",
-     *     tags={"Doctor - Meetings"},
-     *     summary="Get meeting",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function show(Request $request, int $id): JsonResponse
     {
         $meeting = Meeting::query()
@@ -60,19 +39,7 @@ class MeetingController extends Controller
         return $this->success(['meeting' => $meeting]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/meetings/{id}/video-room",
-     *     tags={"Doctor - Meetings"},
-     *     summary="Get Jitsi video room URL",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=403, description="Meeting not active"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function getVideoRoom(int $id): JsonResponse
     {
         $doctor = auth('doctor-api')->user();

@@ -10,16 +10,7 @@ use Illuminate\Support\Facades\Schema;
 
 class DrugController extends BaseCompanyController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/company/drugs",
-     *     tags={"Company - Drugs"},
-     *     summary="List company drugs",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function index(): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -34,31 +25,7 @@ class DrugController extends BaseCompanyController
         return $this->success(['drugs' => $drugs]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/drugs",
-     *     tags={"Company - Drugs"},
-     *     summary="Create drug (multipart if image)",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 required={"name","category_id"},
-     *                 @OA\Property(property="name", type="string"),
-     *                 @OA\Property(property="description", type="string"),
-     *                 @OA\Property(property="category_id", type="integer"),
-     *                 @OA\Property(property="image", type="string", format="binary"),
-     *                 @OA\Property(property="status", type="string", enum={"active","inactive"}),
-     *                 @OA\Property(property="ingredient_ids", type="array", @OA\Items(type="integer"))
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function store(Request $request): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -110,18 +77,7 @@ class DrugController extends BaseCompanyController
         return $this->success(['drug' => $drug->load(['category', 'ingredients'])], null, 201);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/company/drugs/{id}",
-     *     tags={"Company - Drugs"},
-     *     summary="Get drug",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function show(int $id): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -139,33 +95,7 @@ class DrugController extends BaseCompanyController
         return $this->success(['drug' => $drug]);
     }
 
-    /**
-     * @OA\Put(
-     *     path="/api/company/drugs/{id}",
-     *     tags={"Company - Drugs"},
-     *     summary="Update drug",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 required={"name","category_id"},
-     *                 @OA\Property(property="name", type="string"),
-     *                 @OA\Property(property="description", type="string"),
-     *                 @OA\Property(property="category_id", type="integer"),
-     *                 @OA\Property(property="image", type="string", format="binary"),
-     *                 @OA\Property(property="status", type="string", enum={"active","inactive"}),
-     *                 @OA\Property(property="ingredient_ids", type="array", @OA\Items(type="integer"))
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function update(Request $request, int $id): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -221,18 +151,6 @@ class DrugController extends BaseCompanyController
         return $this->success(['drug' => $drug->fresh()->load(['category', 'ingredients'])]);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/company/drugs/{id}",
-     *     tags={"Company - Drugs"},
-     *     summary="Delete drug",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
     public function destroy(int $id): JsonResponse
     {
         $company = $this->companyOrForbidden();

@@ -9,16 +9,7 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/posts",
-     *     tags={"Doctor - Posts"},
-     *     summary="List published posts",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function index(): JsonResponse
     {
         $posts = Post::query()
@@ -30,29 +21,7 @@ class PostController extends Controller
         return $this->success(['posts' => $posts]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/doctor/posts",
-     *     tags={"Doctor - Posts"},
-     *     summary="Create post (multipart if image)",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 required={"title","content","status"},
-     *                 @OA\Property(property="title", type="string"),
-     *                 @OA\Property(property="content", type="string"),
-     *                 @OA\Property(property="status", type="string", enum={"published","draft"}),
-     *                 @OA\Property(property="image", type="string", format="binary")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function store(Request $request): JsonResponse
     {
         $validated = $this->validateRequest($request, [
@@ -81,18 +50,7 @@ class PostController extends Controller
         return $this->success(['post' => $post], null, 201);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/posts/{id}",
-     *     tags={"Doctor - Posts"},
-     *     summary="Get post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function show(int $id): JsonResponse
     {
         $post = Post::query()
@@ -107,31 +65,7 @@ class PostController extends Controller
         return $this->success(['post' => $post]);
     }
 
-    /**
-     * @OA\Put(
-     *     path="/api/doctor/posts/{id}",
-     *     tags={"Doctor - Posts"},
-     *     summary="Update own post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 required={"title","content","status"},
-     *                 @OA\Property(property="title", type="string"),
-     *                 @OA\Property(property="content", type="string"),
-     *                 @OA\Property(property="status", type="string", enum={"published","draft"}),
-     *                 @OA\Property(property="image", type="string", format="binary")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=403, description="Forbidden"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function update(Request $request, int $id): JsonResponse
     {
         $post = Post::find($id);
@@ -167,19 +101,7 @@ class PostController extends Controller
         return $this->success(['post' => $post->fresh()]);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/doctor/posts/{id}",
-     *     tags={"Doctor - Posts"},
-     *     summary="Delete own post",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=403, description="Forbidden"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function destroy(Request $request, int $id): JsonResponse
     {
         $post = Post::find($id);

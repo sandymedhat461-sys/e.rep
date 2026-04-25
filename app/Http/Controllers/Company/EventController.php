@@ -8,16 +8,7 @@ use Illuminate\Http\Request;
 
 class EventController extends BaseCompanyController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/company/events",
-     *     tags={"Company - Events"},
-     *     summary="List company events",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function index(): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -36,28 +27,7 @@ class EventController extends BaseCompanyController
         return $this->success(['events' => $events]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/events",
-     *     tags={"Company - Events"},
-     *     summary="Create event",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="title", type="string"),
-     *             @OA\Property(property="description", type="string"),
-     *             @OA\Property(property="location", type="string"),
-     *             @OA\Property(property="event_date", type="string", format="date-time"),
-     *             @OA\Property(property="max_capacity", type="integer"),
-     *             @OA\Property(property="status", type="string", enum={"upcoming","ongoing","completed","cancelled"}),
-     *             @OA\Property(property="points_required", type="integer")
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function store(Request $request): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -94,18 +64,7 @@ class EventController extends BaseCompanyController
         return $this->success(['event' => $event], null, 201);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/company/events/{id}",
-     *     tags={"Company - Events"},
-     *     summary="Get event",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function show(int $id): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -126,30 +85,7 @@ class EventController extends BaseCompanyController
         return $this->success(['event' => $event]);
     }
 
-    /**
-     * @OA\Put(
-     *     path="/api/company/events/{id}",
-     *     tags={"Company - Events"},
-     *     summary="Update event",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="title", type="string"),
-     *             @OA\Property(property="description", type="string"),
-     *             @OA\Property(property="location", type="string"),
-     *             @OA\Property(property="event_date", type="string", format="date-time"),
-     *             @OA\Property(property="max_capacity", type="integer"),
-     *             @OA\Property(property="status", type="string"),
-     *             @OA\Property(property="points_required", type="integer")
-     *         )
-     *     ),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function update(Request $request, int $id): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -196,18 +132,7 @@ class EventController extends BaseCompanyController
         return $this->success(['event' => $event]);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/company/events/{id}",
-     *     tags={"Company - Events"},
-     *     summary="Delete event",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function destroy(int $id): JsonResponse
     {
         $company = $this->companyOrForbidden();

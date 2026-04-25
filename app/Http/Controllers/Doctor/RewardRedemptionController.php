@@ -11,16 +11,7 @@ use Illuminate\Http\Request;
 
 class RewardRedemptionController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/redemptions",
-     *     tags={"Doctor - Points"},
-     *     summary="List my redemptions",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function index(Request $request): JsonResponse
     {
         $redemptions = RewardRedemption::query()
@@ -32,19 +23,7 @@ class RewardRedemptionController extends Controller
         return $this->success(['redemptions' => $redemptions]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/doctor/rewards/{rewardId}/redeem",
-     *     tags={"Doctor - Points"},
-     *     summary="Redeem reward",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="rewardId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Not enough points"),
-     *     @OA\Response(response=404, description="Reward not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+ 
     public function store(Request $request, ?int $rewardId = null): JsonResponse
     {
         if ($rewardId === null) {

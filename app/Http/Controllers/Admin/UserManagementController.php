@@ -11,16 +11,7 @@ use Throwable;
 
 class UserManagementController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/admin/users/pending",
-     *     tags={"Admin - Users"},
-     *     summary="List pending users",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function index(): JsonResponse
     {
         return response()->json([
@@ -33,19 +24,7 @@ class UserManagementController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/admin/users/{type}/{id}/approve",
-     *     tags={"Admin - Users"},
-     *     summary="Approve user",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="type", in="path", required=true, @OA\Schema(type="string", enum={"company","doctor","rep"})),
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="User not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function approve(string $type, int $id): JsonResponse
     {
         try {
@@ -76,19 +55,7 @@ class UserManagementController extends Controller
         }
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/admin/users/{type}/{id}/block",
-     *     tags={"Admin - Users"},
-     *     summary="Block user",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="type", in="path", required=true, @OA\Schema(type="string", enum={"company","doctor","rep"})),
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="User not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function block(string $type, int $id): JsonResponse
     {
         try {

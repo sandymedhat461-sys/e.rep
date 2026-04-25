@@ -8,18 +8,7 @@ use Illuminate\Http\JsonResponse;
 
 class EventRequestController extends BaseCompanyController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/company/events/{eventId}/requests",
-     *     tags={"Company - Events"},
-     *     summary="List event registration requests",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="eventId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Event not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+  
     public function index(int $eventId): JsonResponse
     {
         $event = $this->ownedEvent($eventId);
@@ -35,19 +24,7 @@ class EventRequestController extends BaseCompanyController
         return $this->success(['requests' => $requests]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/events/{eventId}/requests/{id}/approve",
-     *     tags={"Company - Events"},
-     *     summary="Approve event request",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="eventId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function approve(int $eventId, int $id): JsonResponse
     {
         $request = $this->ownedEventRequest($eventId, $id);
@@ -59,19 +36,7 @@ class EventRequestController extends BaseCompanyController
         return $this->success(['request' => $request->fresh()]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/events/{eventId}/requests/{id}/reject",
-     *     tags={"Company - Events"},
-     *     summary="Reject event request",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="eventId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+  
     public function reject(int $eventId, int $id): JsonResponse
     {
         $request = $this->ownedEventRequest($eventId, $id);

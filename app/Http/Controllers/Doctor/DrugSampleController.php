@@ -10,17 +10,6 @@ use Illuminate\Http\Request;
 
 class DrugSampleController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/samples",
-     *     tags={"Doctor - Samples"},
-     *     summary="List sample requests",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="status", in="query", @OA\Schema(type="string")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
     public function index(Request $request): JsonResponse
     {
         $query = DrugSample::query()
@@ -34,24 +23,6 @@ class DrugSampleController extends Controller
         return $this->success(['samples' => $query->latest()->get()]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/doctor/samples",
-     *     tags={"Doctor - Samples"},
-     *     summary="Request drug sample",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="drug_id", type="integer"),
-     *             @OA\Property(property="rep_id", type="integer"),
-     *             @OA\Property(property="quantity", type="integer", minimum=1)
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
     public function store(Request $request): JsonResponse
     {
         $doctor = auth('doctor-api')->user();

@@ -15,9 +15,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('drug_categories', function (Blueprint $table) {
-            $table->string('line_manager_name')->nullable();
-        });
     }
 };
 

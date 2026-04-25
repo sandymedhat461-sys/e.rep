@@ -9,16 +9,7 @@ use Illuminate\Http\Request;
 
 class MedicalRepController extends BaseCompanyController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/company/reps",
-     *     tags={"Company - Reps"},
-     *     summary="List company medical reps",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function index(): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -33,18 +24,7 @@ class MedicalRepController extends BaseCompanyController
         return $this->success(['reps' => $reps]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/company/reps/{id}",
-     *     tags={"Company - Reps"},
-     *     summary="Get medical rep",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function show(int $id): JsonResponse
     {
         $rep = $this->ownedRep($id);
@@ -56,27 +36,7 @@ class MedicalRepController extends BaseCompanyController
         return $this->success(['rep' => $rep]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/reps/{id}/targets",
-     *     tags={"Company - Reps"},
-     *     summary="Create or update rep target",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="target_type", type="string", enum={"meetings","samples","reviews","events","doctors"}),
-     *             @OA\Property(property="target_value", type="integer"),
-     *             @OA\Property(property="period_start", type="string", format="date"),
-     *             @OA\Property(property="period_end", type="string", format="date")
-     *         )
-     *     ),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Rep not found"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+ 
     public function upsertTarget(Request $request, int $id): JsonResponse
     {
         $rep = $this->ownedRep($id);
@@ -107,18 +67,7 @@ class MedicalRepController extends BaseCompanyController
         return $this->success(['target' => $target]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/company/reps/{id}/targets",
-     *     tags={"Company - Reps"},
-     *     summary="List rep targets with progress",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Rep not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+  
     public function targets(int $id): JsonResponse
     {
         $rep = $this->ownedRep($id);

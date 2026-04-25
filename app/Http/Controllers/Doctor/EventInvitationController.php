@@ -11,17 +11,7 @@ use Illuminate\Support\Carbon;
 
 class EventInvitationController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/invitations",
-     *     tags={"Doctor - Events"},
-     *     summary="List event invitations",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="status", in="query", @OA\Schema(type="string")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function index(Request $request): JsonResponse
     {
         $query = EventInvitation::query()
@@ -35,19 +25,7 @@ class EventInvitationController extends Controller
         return $this->success(['invitations' => $query->latest()->get()]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/doctor/invitations/{id}/accept",
-     *     tags={"Doctor - Events"},
-     *     summary="Accept invitation",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=422, description="Already responded"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function accept(Request $request, int $id): JsonResponse
     {
         $invitation = EventInvitation::where('id', $id)
@@ -74,19 +52,7 @@ class EventInvitationController extends Controller
         return $this->success([], 'Invitation accepted');
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/doctor/invitations/{id}/decline",
-     *     tags={"Doctor - Events"},
-     *     summary="Decline invitation",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=422, description="Already responded"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function decline(Request $request, int $id): JsonResponse
     {
         $invitation = EventInvitation::where('id', $id)

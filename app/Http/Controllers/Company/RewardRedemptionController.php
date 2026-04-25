@@ -7,16 +7,7 @@ use Illuminate\Http\JsonResponse;
 
 class RewardRedemptionController extends BaseCompanyController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/company/redemptions",
-     *     tags={"Company - Rewards"},
-     *     summary="List reward redemptions",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function index(): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -33,18 +24,7 @@ class RewardRedemptionController extends BaseCompanyController
         return $this->success(['redemptions' => $redemptions]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/redemptions/{id}/fulfill",
-     *     tags={"Company - Rewards"},
-     *     summary="Fulfill redemption",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function fulfill(int $id): JsonResponse
     {
         $redemption = $this->ownedRedemption($id);
@@ -56,18 +36,7 @@ class RewardRedemptionController extends BaseCompanyController
         return $this->success(['redemption' => $redemption->fresh()]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/redemptions/{id}/cancel",
-     *     tags={"Company - Rewards"},
-     *     summary="Cancel redemption",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function cancel(int $id): JsonResponse
     {
         $redemption = $this->ownedRedemption($id);

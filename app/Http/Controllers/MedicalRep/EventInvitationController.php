@@ -10,16 +10,7 @@ use Illuminate\Http\Request;
 
 class EventInvitationController extends BaseMedicalRepController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/rep/invitations",
-     *     tags={"Rep - Meetings"},
-     *     summary="List event invitations for assigned doctors",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function index(): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -38,25 +29,7 @@ class EventInvitationController extends BaseMedicalRepController
         return $this->success(['invitations' => $invitations]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/rep/events/{eventId}/invite",
-     *     tags={"Rep - Meetings"},
-     *     summary="Invite assigned doctor to company event",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="eventId", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             @OA\Property(property="doctor_id", type="integer")
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Created"),
-     *     @OA\Response(response=403, description="Doctor not assigned"),
-     *     @OA\Response(response=404, description="Event not found"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function invite(Request $request, int $eventId): JsonResponse
     {
         $rep = $this->repOrForbidden();

@@ -13,16 +13,7 @@ use Illuminate\Http\JsonResponse;
 
 class DashboardController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/admin/dashboard/stats",
-     *     tags={"Admin - Dashboard"},
-     *     summary="Dashboard statistics",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+
     public function stats(): JsonResponse
     {
         return $this->success([

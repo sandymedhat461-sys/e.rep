@@ -7,16 +7,7 @@ use Illuminate\Http\JsonResponse;
 
 class DrugSampleController extends BaseMedicalRepController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/rep/samples",
-     *     tags={"Rep - Samples"},
-     *     summary="List sample requests",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function index(): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -31,18 +22,7 @@ class DrugSampleController extends BaseMedicalRepController
         return $this->success(['samples' => $samples]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/rep/samples/{id}",
-     *     tags={"Rep - Samples"},
-     *     summary="Get sample request",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function show(int $id): JsonResponse
     {
         $sample = $this->ownedSample($id);
@@ -53,18 +33,7 @@ class DrugSampleController extends BaseMedicalRepController
         return $this->success(['sample' => $sample->load(['doctor:id,full_name,email', 'drug:id,name,market_name'])]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/rep/samples/{id}/approve",
-     *     tags={"Rep - Samples"},
-     *     summary="Approve sample request",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function approve(int $id): JsonResponse
     {
         $sample = $this->ownedSample($id);
@@ -75,18 +44,7 @@ class DrugSampleController extends BaseMedicalRepController
         return $this->success(['sample' => $sample->fresh()]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/rep/samples/{id}/reject",
-     *     tags={"Rep - Samples"},
-     *     summary="Reject sample request",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function reject(int $id): JsonResponse
     {
         $sample = $this->ownedSample($id);
@@ -97,19 +55,7 @@ class DrugSampleController extends BaseMedicalRepController
         return $this->success(['sample' => $sample->fresh()]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/rep/samples/{id}/deliver",
-     *     tags={"Rep - Samples"},
-     *     summary="Mark sample as delivered",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=422, description="Must be approved first"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+   
     public function deliver(int $id): JsonResponse
     {
         $sample = $this->ownedSample($id);

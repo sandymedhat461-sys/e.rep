@@ -9,16 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class NotificationController extends BaseCompanyController
 {
-    /**
-     * @OA\Get(
-     *     path="/api/company/notifications",
-     *     tags={"Company - Messages"},
-     *     summary="List notifications",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function index(): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -45,18 +36,7 @@ class NotificationController extends BaseCompanyController
         ]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/notifications/{id}/read",
-     *     tags={"Company - Messages"},
-     *     summary="Mark notification as read",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="string")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function markAsRead(string $id): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -78,16 +58,7 @@ class NotificationController extends BaseCompanyController
         return $this->success([], 'Marked as read');
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/company/notifications/read-all",
-     *     tags={"Company - Messages"},
-     *     summary="Mark all notifications as read",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function markAllAsRead(): JsonResponse
     {
         $company = $this->companyOrForbidden();

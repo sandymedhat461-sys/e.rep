@@ -10,19 +10,7 @@ use Illuminate\Http\Request;
 
 class DrugController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/drugs",
-     *     tags={"Doctor - Drugs"},
-     *     summary="List drugs (paginated)",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="search", in="query", @OA\Schema(type="string")),
-     *     @OA\Parameter(name="category_id", in="query", @OA\Schema(type="integer")),
-     *     @OA\Parameter(name="company_id", in="query", @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function index(Request $request): JsonResponse
     {
         $doctorId = (int) $request->user()->id;
@@ -50,18 +38,7 @@ class DrugController extends Controller
         return $this->success(['drugs' => $drugs]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/doctor/drugs/{id}",
-     *     tags={"Doctor - Drugs"},
-     *     summary="Get drug detail",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Success"),
-     *     @OA\Response(response=404, description="Not found"),
-     *     @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
+    
     public function show(Request $request, int $id): JsonResponse
     {
         $doctorId = (int) $request->user()->id;
