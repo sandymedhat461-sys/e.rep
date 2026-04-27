@@ -74,7 +74,7 @@ class Drug extends Model
 
     public function activeIngredients(): BelongsToMany
     {
-        return $this->belongsToMany(ActiveIngredient::class, 'drug_ingredients', 'drug_id', 'ingredient_id')->withoutPivot();
+        return $this->belongsToMany(ActiveIngredient::class, 'drug_ingredients', 'drug_id', 'ingredient_id');
     }
 
     public function ingredients(): BelongsToMany
