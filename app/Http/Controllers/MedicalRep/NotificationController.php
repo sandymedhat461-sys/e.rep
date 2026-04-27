@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\MedicalRep;
 
-use App\Models\MedicalRep;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -19,11 +18,7 @@ class NotificationController extends BaseMedicalRepController
 
         $notifications = DB::table('notifications')
             ->where('notifiable_id', $rep->id)
-            ->where(function ($q) {
-                $q->where('notifiable_type', MedicalRep::class)
-                    ->orWhere('notifiable_type', 'medical_rep')
-                    ->orWhere('notifiable_type', 'MedicalRep');
-            })
+            ->whereIn('notifiable_type', ['medical_rep', 'MedicalRep', 'App\\Models\\MedicalRep'])
             ->orderByDesc('created_at')
             ->get();
 
@@ -41,11 +36,7 @@ class NotificationController extends BaseMedicalRepController
         $updated = DB::table('notifications')
             ->where('id', $id)
             ->where('notifiable_id', $rep->id)
-            ->where(function ($q) {
-                $q->where('notifiable_type', MedicalRep::class)
-                    ->orWhere('notifiable_type', 'medical_rep')
-                    ->orWhere('notifiable_type', 'MedicalRep');
-            })
+            ->whereIn('notifiable_type', ['medical_rep', 'MedicalRep', 'App\\Models\\MedicalRep'])
             ->update(['read_at' => Carbon::now()]);
 
         if (!$updated) {
@@ -65,11 +56,7 @@ class NotificationController extends BaseMedicalRepController
 
         DB::table('notifications')
             ->where('notifiable_id', $rep->id)
-            ->where(function ($q) {
-                $q->where('notifiable_type', MedicalRep::class)
-                    ->orWhere('notifiable_type', 'medical_rep')
-                    ->orWhere('notifiable_type', 'MedicalRep');
-            })
+            ->whereIn('notifiable_type', ['medical_rep', 'MedicalRep', 'App\\Models\\MedicalRep'])
             ->whereNull('read_at')
             ->update(['read_at' => Carbon::now()]);
 

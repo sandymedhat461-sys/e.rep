@@ -89,6 +89,19 @@ Responses typically follow:
 
 Unless an endpoint specifies otherwise, assume **401** for missing `Authorization: Bearer`, **404** for bad IDs, and **422** for invalid body/query.
 
+### Polymorphic type keys (`*_type` columns)
+
+The API stores Laravel morph map aliases (not fully qualified model class names) for polymorphic relations such as `sender_type`, `receiver_type`, `notifiable_type`, `author_type`, and `user_type`:
+
+| Key | Model |
+|-----|--------|
+| `doctor` | Doctor |
+| `company` | Company |
+| `medical_rep` | Medical rep |
+| `admin` | Admin |
+
+Legacy rows may still use older strings or full class names; list endpoints accept both where applicable.
+
 ---
 
 # AUTH
@@ -1422,6 +1435,8 @@ All routes require: `Authorization: Bearer {company_token}`
 }
 ```
 
+`receiver_type` is `doctor` or `medical_rep`. Persisted polymorphic keys: `sender_type` `company`, `receiver_type` matches `receiver_type`.
+
 **Success (201):** `{ "success": true, "data": { "message": { "id": 1 } } }`
 
 **Errors:** `401`, `422`.
@@ -1937,9 +1952,13 @@ All routes require: `Authorization: Bearer {doctor_token}`
 
 - **Method:** `GET`
 - **URL:** `/api/doctor/rewards`
-- **Auth:** Yes — Doctor
+- **Auth:** Yes — Doctor (`auth:doctor-api`)
 
 **Success (200):** `{ "success": true, "data": { "rewards": [] } }`
+
+Each reward may include `can_redeem` (boolean) based on the doctor’s current total points vs `points_required`.
+
+**Related (same auth):** `GET /api/doctor/redemptions`, `POST /api/doctor/rewards/{rewardId}/redeem`
 
 **Errors:** `401`.
 
@@ -1949,9 +1968,11 @@ All routes require: `Authorization: Bearer {doctor_token}`
 
 - **Method:** `GET`
 - **URL:** `/api/doctor/redemptions`
-- **Auth:** Yes — Doctor
+- **Auth:** Yes — Doctor (`auth:doctor-api`)
 
 **Success (200):** `{ "success": true, "data": { "redemptions": [] } }`
+
+**Related (same auth):** `GET /api/doctor/rewards`, `POST /api/doctor/rewards/{rewardId}/redeem`
 
 **Errors:** `401`.
 
@@ -1961,13 +1982,37 @@ All routes require: `Authorization: Bearer {doctor_token}`
 
 - **Method:** `POST`
 - **URL:** `/api/doctor/rewards/{rewardId}/redeem`
-- **Auth:** Yes — Doctor
+- **Auth:** Yes — Doctor (`auth:doctor-api`)
 
-**Body:** `{}` or `{ "shipping_address": "..." }` if required
+**Body:** `{}` (no fields required)
 
-**Success (201):** `{ "success": true, "data": { "redemption": { "id": 1, "status": "pending" } } }`
+Creates a redemption if the authenticated doctor’s total points (sum of `doctor_points.value`) is greater than or equal to `reward.points_required`.
 
-**Errors:** `401`, `404`, `422` insufficient points.
+**Success (201):**
+
+```json
+{
+  "success": true,
+  "data": {
+    "redemption": {
+      "id": 1,
+      "doctor_id": 1,
+      "reward_id": 2,
+      "points_spent": 100,
+      "status": "pending",
+      "redeemed_at": "2026-04-28T12:00:00.000000Z"
+    }
+  }
+}
+```
+
+**Errors:**
+
+| HTTP | When |
+|------|------|
+| **401** | Missing or invalid doctor token |
+| **404** | `{ "success": false, "message": "Reward not found" }` — unknown `rewardId` |
+| **422** | `{ "success": false, "message": "Insufficient points" }` — total points below `points_required` |
 
 ---
 
@@ -2114,11 +2159,12 @@ All routes require: `Authorization: Bearer {doctor_token}`
 
 ```json
 {
-  "receiver_type": "medical_rep",
-  "receiver_id": 1,
-  "body": "Hello rep"
+  "receiver_rep_id": 1,
+  "content": "Hello rep"
 }
 ```
+
+`receiver_rep_id` must exist in `medical_reps`. Stored rows use morph keys `sender_type`: `doctor`, `receiver_type`: `medical_rep`.
 
 **Success (201):** `{ "success": true, "data": { "message": { "id": 1 } } }`
 
@@ -2605,6 +2651,8 @@ All routes require: `Authorization: Bearer {rep_token}`
   "body": "Follow-up after visit"
 }
 ```
+
+Persisted polymorphic keys: `sender_type` `medical_rep`, `receiver_type` `doctor` (when messaging a doctor). Messaging `company` is rejected with `422`.
 
 **Success (201):** `{ "success": true, "data": { "message": { "id": 1 } } }`
 

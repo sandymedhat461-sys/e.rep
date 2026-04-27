@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Doctor;
 
 use App\Events\MessageSent;
 use App\Http\Controllers\Controller;
-use App\Models\Doctor;
-use App\Models\MedicalRep;
 use App\Models\Message;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,7 +19,7 @@ class MessageController extends Controller
                 $query->where(function ($q) use ($doctorId) {
                     $q->where('sender_type', 'doctor')->where('sender_id', $doctorId);
                 })->orWhere(function ($q) use ($doctorId) {
-                    $q->where('receiver_id', $doctorId)->where('receiver_type', Doctor::class);
+                    $q->where('receiver_id', $doctorId)->whereIn('receiver_type', ['doctor', 'Doctor', 'App\\Models\\Doctor']);
                 });
             })
             ->with(['sender', 'receiver'])
@@ -46,7 +44,7 @@ class MessageController extends Controller
             'sender_type' => 'doctor',
             'sender_id' => $request->user()->id,
             'receiver_id' => $validated['receiver_rep_id'],
-            'receiver_type' => MedicalRep::class,
+            'receiver_type' => 'medical_rep',
             'body' => $validated['content'],
             'is_read' => false,
         ]);
@@ -62,7 +60,7 @@ class MessageController extends Controller
     {
         $message = Message::where('id', $id)
             ->where('receiver_id', $request->user()->id)
-            ->where('receiver_type', Doctor::class)
+            ->whereIn('receiver_type', ['doctor', 'Doctor', 'App\\Models\\Doctor'])
             ->first();
 
         if (!$message) {

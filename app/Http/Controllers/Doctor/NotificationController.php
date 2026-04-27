@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
-use App\Models\Doctor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -15,7 +14,7 @@ class NotificationController extends Controller
     public function index(Request $request): JsonResponse
     {
         $doctorId = (int) $request->user()->id;
-        $doctorTypes = ['doctor', 'Doctor', Doctor::class, 'App\\Models\\Doctor'];
+        $doctorTypes = ['doctor', 'Doctor', 'App\\Models\\Doctor'];
         $notifications = DB::table('notifications')
             ->where('notifiable_id', $doctorId)
             ->whereIn('notifiable_type', $doctorTypes)
@@ -36,7 +35,7 @@ class NotificationController extends Controller
 
     public function markAsRead(Request $request, string $id): JsonResponse
     {
-        $doctorTypes = ['doctor', 'Doctor', Doctor::class, 'App\\Models\\Doctor'];
+        $doctorTypes = ['doctor', 'Doctor', 'App\\Models\\Doctor'];
         $updated = DB::table('notifications')
             ->where('id', $id)
             ->where('notifiable_id', $request->user()->id)
@@ -53,7 +52,7 @@ class NotificationController extends Controller
     
     public function markAllAsRead(Request $request): JsonResponse
     {
-        $doctorTypes = ['doctor', 'Doctor', Doctor::class, 'App\\Models\\Doctor'];
+        $doctorTypes = ['doctor', 'Doctor', 'App\\Models\\Doctor'];
         DB::table('notifications')
             ->where('notifiable_id', $request->user()->id)
             ->whereIn('notifiable_type', $doctorTypes)

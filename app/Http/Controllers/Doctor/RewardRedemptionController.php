@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 
 class RewardRedemptionController extends Controller
 {
-   
     public function index(Request $request): JsonResponse
     {
         $redemptions = RewardRedemption::query()
@@ -23,19 +22,8 @@ class RewardRedemptionController extends Controller
         return $this->success(['redemptions' => $redemptions]);
     }
 
- 
-    public function store(Request $request, ?int $rewardId = null): JsonResponse
+    public function redeem(Request $request, int $rewardId): JsonResponse
     {
-        if ($rewardId === null) {
-            $validated = $this->validateRequest($request, [
-                'reward_id' => ['required', 'exists:rewards,id'],
-            ]);
-            if ($validated instanceof JsonResponse) {
-                return $validated;
-            }
-            $rewardId = (int) $validated['reward_id'];
-        }
-
         $reward = Reward::find($rewardId);
         if (!$reward) {
             return $this->error('Reward not found', 404);
@@ -45,7 +33,7 @@ class RewardRedemptionController extends Controller
         $totalPoints = (int) DoctorPoint::where('doctor_id', $doctorId)->sum('value');
 
         if ($totalPoints < (int) $reward->points_required) {
-            return $this->error('Not enough points', 422);
+            return $this->error('Insufficient points', 422);
         }
 
         $redemption = RewardRedemption::create([
@@ -53,6 +41,7 @@ class RewardRedemptionController extends Controller
             'reward_id' => $reward->id,
             'points_spent' => (int) $reward->points_required,
             'status' => 'pending',
+            'redeemed_at' => now(),
         ]);
 
         return $this->success(['redemption' => $redemption], null, 201);

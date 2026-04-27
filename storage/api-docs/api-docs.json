@@ -4125,7 +4125,7 @@
                         "description": "Created"
                     },
                     "422": {
-                        "description": "Not enough points"
+                        "description": "Insufficient points"
                     },
                     "404": {
                         "description": "Reward not found"

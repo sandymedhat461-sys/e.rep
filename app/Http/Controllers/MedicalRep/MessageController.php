@@ -4,7 +4,6 @@ namespace App\Http\Controllers\MedicalRep;
 
 use App\Events\MessageSent;
 use App\Models\Doctor;
-use App\Models\MedicalRep;
 use App\Models\Message;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,7 +20,7 @@ class MessageController extends BaseMedicalRepController
 
         $messages = Message::query()
             ->where('receiver_id', $rep->id)
-            ->where('receiver_type', MedicalRep::class)
+            ->whereIn('receiver_type', ['medical_rep', 'MedicalRep', 'rep', 'App\\Models\\MedicalRep'])
             ->with('sender')
             ->orderByDesc('created_at')
             ->get();
@@ -55,10 +54,10 @@ class MessageController extends BaseMedicalRepController
         }
 
         $message = Message::create([
-            'sender_type' => 'rep',
+            'sender_type' => 'medical_rep',
             'sender_id' => $rep->id,
             'receiver_id' => $validated['receiver_id'],
-            'receiver_type' => Doctor::class,
+            'receiver_type' => 'doctor',
             'body' => $validated['body'],
             'is_read' => false,
         ]);
@@ -80,7 +79,7 @@ class MessageController extends BaseMedicalRepController
         $message = Message::query()
             ->where('id', $id)
             ->where('receiver_id', $rep->id)
-            ->where('receiver_type', MedicalRep::class)
+            ->whereIn('receiver_type', ['medical_rep', 'MedicalRep', 'rep', 'App\\Models\\MedicalRep'])
             ->first();
         if (!$message) {
             return $this->error('Message not found', 404);

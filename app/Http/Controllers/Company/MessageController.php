@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Company;
 
 use App\Events\MessageSent;
-use App\Models\Company;
 use App\Models\Doctor;
 use App\Models\MedicalRep;
 use App\Models\Message;
@@ -22,7 +21,7 @@ class MessageController extends BaseCompanyController
 
         $messages = Message::query()
             ->where('receiver_id', $company->id)
-            ->where('receiver_type', Company::class)
+            ->whereIn('receiver_type', ['company', 'Company', 'App\\Models\\Company'])
             ->with('sender')
             ->orderByDesc('created_at')
             ->get();
@@ -47,13 +46,9 @@ class MessageController extends BaseCompanyController
             return $validated;
         }
 
-        $receiverClass = match ($validated['receiver_type']) {
-            'doctor' => Doctor::class,
-            'medical_rep' => MedicalRep::class,
-            default => null,
-        };
+        $receiverType = $validated['receiver_type'];
 
-        if ($receiverClass === Doctor::class) {
+        if ($receiverType === 'doctor') {
             if (!Doctor::whereKey($validated['receiver_id'])->exists()) {
                 return $this->error('Receiver not found', 404);
             }
@@ -62,10 +57,10 @@ class MessageController extends BaseCompanyController
         }
 
         $message = Message::create([
-            'sender_type' => Company::class,
+            'sender_type' => 'company',
             'sender_id' => $company->id,
             'receiver_id' => $validated['receiver_id'],
-            'receiver_type' => $receiverClass,
+            'receiver_type' => $receiverType,
             'body' => $validated['body'],
             'is_read' => false,
         ]);
@@ -87,7 +82,7 @@ class MessageController extends BaseCompanyController
         $message = Message::query()
             ->where('id', $id)
             ->where('receiver_id', $company->id)
-            ->where('receiver_type', Company::class)
+            ->whereIn('receiver_type', ['company', 'Company', 'App\\Models\\Company'])
             ->first();
 
         if (!$message) {

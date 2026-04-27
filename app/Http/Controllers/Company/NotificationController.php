@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Company;
 
-use App\Models\Company;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +16,7 @@ class NotificationController extends BaseCompanyController
             return $company;
         }
 
-        $types = ['company', 'Company', Company::class, 'App\\Models\\Company'];
+        $types = ['company', 'Company', 'App\\Models\\Company'];
         $notifications = DB::table('notifications')
             ->where('notifiable_id', $company->id)
             ->whereIn('notifiable_type', $types)
@@ -44,7 +43,7 @@ class NotificationController extends BaseCompanyController
             return $company;
         }
 
-        $types = ['company', 'Company', Company::class, 'App\\Models\\Company'];
+        $types = ['company', 'Company', 'App\\Models\\Company'];
         $updated = DB::table('notifications')
             ->where('id', $id)
             ->where('notifiable_id', $company->id)
@@ -66,7 +65,7 @@ class NotificationController extends BaseCompanyController
             return $company;
         }
 
-        $types = ['company', 'Company', Company::class, 'App\\Models\\Company'];
+        $types = ['company', 'Company', 'App\\Models\\Company'];
         DB::table('notifications')
             ->where('notifiable_id', $company->id)
             ->whereIn('notifiable_type', $types)

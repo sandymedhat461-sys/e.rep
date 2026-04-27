@@ -120,7 +120,7 @@ Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
     Route::get('/rewards', [RewardController::class, 'index']);
 
     Route::get('/redemptions', [RewardRedemptionController::class, 'index']);
-    Route::post('/rewards/{rewardId}/redeem', [RewardRedemptionController::class, 'store']);
+    Route::post('/rewards/{rewardId}/redeem', [RewardRedemptionController::class, 'redeem']);
 
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/posts', [PostController::class, 'store']);
