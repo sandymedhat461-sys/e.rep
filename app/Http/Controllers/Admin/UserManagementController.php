@@ -83,6 +83,28 @@ class UserManagementController extends Controller
         }
     }
 
+    public function deleteUser(string $type, int $id): JsonResponse
+    {
+        try {
+            $user = $this->resolveUser($type, $id);
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found',
+                ], 404);
+            }
+
+            $user->delete();
+
+            return $this->success([], 'User deleted');
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+            ], 500);
+        }
+    }
+
     public function listDoctors(): JsonResponse
     {
         $doctors = Doctor::whereIn('status', ['active', 'pending', 'blocked'])->get();

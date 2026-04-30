@@ -22,6 +22,7 @@ use App\Http\Controllers\Doctor\MessageController;
 use App\Http\Controllers\Doctor\NotificationController;
 use App\Http\Controllers\Doctor\PostController;
 use App\Http\Controllers\Doctor\PostLikeController;
+use App\Http\Controllers\Doctor\ProfileController as DoctorProfileController;
 use App\Http\Controllers\Doctor\RewardController;
 use App\Http\Controllers\Doctor\RewardRedemptionController;
 use App\Http\Controllers\Company\ActiveIngredientController as CompanyActiveIngredientController;
@@ -36,6 +37,7 @@ use App\Http\Controllers\Company\RewardController as CompanyRewardController;
 use App\Http\Controllers\Company\RewardRedemptionController as CompanyRewardRedemptionController;
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 use App\Http\Controllers\Company\MessageController as CompanyMessageController;
+use App\Http\Controllers\Company\ProfileController as CompanyProfileController;
 use App\Http\Controllers\Doctor\ReportController;
 use App\Http\Controllers\MedicalRep\AssignedDoctorController;
 use App\Http\Controllers\MedicalRep\DrugController as MedicalRepDrugController;
@@ -45,6 +47,8 @@ use App\Http\Controllers\MedicalRep\MeetingController as MedicalRepMeetingContro
 use App\Http\Controllers\MedicalRep\MessageController as MedicalRepMessageController;
 use App\Http\Controllers\MedicalRep\NotificationController as MedicalRepNotificationController;
 use App\Http\Controllers\MedicalRep\PostController as MedicalRepPostController;
+use App\Http\Controllers\MedicalRep\ProfileController as MedicalRepProfileController;
+use App\Http\Controllers\MedicalRep\PointController as MedicalRepPointController;
 use App\Http\Controllers\MedicalRep\TargetController as MedicalRepTargetController;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
@@ -76,8 +80,10 @@ Route::prefix('admin')->middleware('auth:admin-api')->group(function () {
     Route::get('/users/pending', [UserManagementController::class, 'index']);
     Route::post('/users/{type}/{id}/approve', [UserManagementController::class, 'approve']);
     Route::post('/users/{type}/{id}/block', [UserManagementController::class, 'block']);
+    Route::delete('/users/{type}/{id}', [UserManagementController::class, 'deleteUser']);
 
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+    Route::get('/reports/stats', [DashboardController::class, 'reportStats']);
 
     Route::get('/categories', [DrugCategoryController::class, 'index']);
     Route::post('/categories', [DrugCategoryController::class, 'store']);
@@ -95,6 +101,9 @@ Route::prefix('admin')->middleware('auth:admin-api')->group(function () {
 });
 
 Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
+    Route::get('/profile', [DoctorProfileController::class, 'show']);
+    Route::put('/profile', [DoctorProfileController::class, 'update']);
+
     Route::get('/drugs', [DrugController::class, 'index']);
     Route::get('/drugs/{id}', [DrugController::class, 'show']);
 
@@ -156,6 +165,9 @@ Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
 
 Route::prefix('company')->middleware('auth:company-api')->group(function () {
     Route::get('/dashboard', [CompanyDashboardController::class, 'index']);
+
+    Route::get('/profile', [CompanyProfileController::class, 'show']);
+    Route::put('/profile', [CompanyProfileController::class, 'update']);
 
     Route::get('/messages', [CompanyMessageController::class, 'index']);
     Route::post('/messages', [CompanyMessageController::class, 'store']);
@@ -219,6 +231,12 @@ Route::prefix('company')->middleware('auth:company-api')->group(function () {
 });
 
 Route::prefix('rep')->middleware('auth:rep-api')->group(function () {
+    Route::get('/profile', [MedicalRepProfileController::class, 'show']);
+    Route::put('/profile', [MedicalRepProfileController::class, 'update']);
+
+    Route::get('/points/total', [MedicalRepPointController::class, 'total']);
+    Route::get('/points', [MedicalRepPointController::class, 'index']);
+
     Route::get('/doctors', [AssignedDoctorController::class, 'index']);
     Route::get('/doctors/{id}', [AssignedDoctorController::class, 'show']);
 

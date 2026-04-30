@@ -648,6 +648,67 @@ All routes require: `Authorization: Bearer {admin_token}`
 
 ---
 
+### Admin reports stats
+
+- **Method:** `GET`
+- **URL:** `/api/admin/reports/stats`
+- **Auth:** Yes — Admin
+
+Returns a full analytics breakdown: counts for doctors, medical reps, and companies by status; total drugs; meetings by status; drug sample requests (pending / delivered); events (total, upcoming by `event_date`, completed); posts (total, with at least one report).
+
+**Success (200):**
+
+```json
+{
+  "success": true,
+  "data": {
+    "doctors": {
+      "total": 0,
+      "active": 0,
+      "pending": 0,
+      "blocked": 0
+    },
+    "medical_reps": {
+      "total": 0,
+      "active": 0,
+      "pending": 0,
+      "blocked": 0
+    },
+    "companies": {
+      "total": 0,
+      "approved": 0,
+      "pending": 0,
+      "blocked": 0
+    },
+    "drugs": { "total": 0 },
+    "meetings": {
+      "total": 0,
+      "completed": 0,
+      "scheduled": 0,
+      "cancelled": 0
+    },
+    "samples": {
+      "total": 0,
+      "pending": 0,
+      "delivered": 0
+    },
+    "events": {
+      "total": 0,
+      "upcoming": 0,
+      "completed": 0
+    },
+    "posts": {
+      "total": 0,
+      "reported": 0
+    }
+  }
+}
+```
+
+**Errors:** `401`.
+
+---
+
 ### Admin list pending users
 
 - **Method:** `GET`
@@ -713,6 +774,27 @@ All routes require: `Authorization: Bearer {admin_token}`
 ```
 
 **Errors:** `401`, `404`.
+
+---
+
+### Admin delete user
+
+- **Method:** `DELETE`
+- **URL:** `/api/admin/users/{type}/{id}`
+- **Auth:** Yes — Admin
+
+Deletes a **doctor**, **rep** (medical rep), or **company** account by path `type` and numeric `id`. `type` must be one of: `doctor`, `rep`, `company`.
+
+**Success (200):**
+
+```json
+{
+  "success": true,
+  "message": "User deleted"
+}
+```
+
+**Errors:** `401`, `404` if the user does not exist or `type` is invalid.
 
 ---
 
@@ -976,6 +1058,32 @@ All routes require: `Authorization: Bearer {company_token}`
 ```
 
 **Errors:** `401`, `403`.
+
+---
+
+### Company profile (show)
+
+- **Method:** `GET`
+- **URL:** `/api/company/profile`
+- **Auth:** Yes — Company
+
+**Success (200):** `{ "success": true, "data": { "company": { } } }`
+
+**Errors:** `401`.
+
+---
+
+### Company profile (update)
+
+- **Method:** `PUT`
+- **URL:** `/api/company/profile`
+- **Auth:** Yes — Company
+
+**Body (all optional):** `company_name` (string, max 255), `hotline`.
+
+**Success (200):** `{ "success": true, "data": { "company": { } } }`
+
+**Errors:** `401`, `422`.
 
 ---
 
@@ -1755,6 +1863,32 @@ All routes require: `Authorization: Bearer {doctor_token}`
 
 ---
 
+### Doctor profile (show)
+
+- **Method:** `GET`
+- **URL:** `/api/doctor/profile`
+- **Auth:** Yes — Doctor
+
+**Success (200):** `{ "success": true, "data": { "doctor": { } } }` — authenticated doctor resource (password and similar hidden fields omitted per model).
+
+**Errors:** `401`.
+
+---
+
+### Doctor profile (update)
+
+- **Method:** `PUT`
+- **URL:** `/api/doctor/profile`
+- **Auth:** Yes — Doctor
+
+**Body (all optional):** `full_name` (string, max 255), `phone`, `hospital_name`, `specialization`.
+
+**Success (200):** `{ "success": true, "data": { "doctor": { } } }`
+
+**Errors:** `401`, `422`.
+
+---
+
 ### Doctor list drugs
 
 - **Method:** `GET`
@@ -2419,6 +2553,58 @@ Or file download — follow `Content-Type` / `Content-Disposition` if the app re
 # MEDICAL REP
 
 All routes require: `Authorization: Bearer {rep_token}`
+
+---
+
+### Rep profile (show)
+
+- **Method:** `GET`
+- **URL:** `/api/rep/profile`
+- **Auth:** Yes — Rep
+
+**Success (200):** `{ "success": true, "data": { "rep": { } } }`
+
+**Errors:** `401`.
+
+---
+
+### Rep profile (update)
+
+- **Method:** `PUT`
+- **URL:** `/api/rep/profile`
+- **Auth:** Yes — Rep
+
+**Body (all optional):** `full_name` (string, max 255), `phone`.
+
+**Success (200):** `{ "success": true, "data": { "rep": { } } }`
+
+**Errors:** `401`, `422`.
+
+---
+
+### Rep point transactions
+
+- **Method:** `GET`
+- **URL:** `/api/rep/points`
+- **Auth:** Yes — Rep
+
+Returns point ledger rows for the authenticated rep (`point_transactions` with `pointable_type` = `medical_rep` and `pointable_id` = rep id), newest first.
+
+**Success (200):** `{ "success": true, "data": { "points": [] } }`
+
+**Errors:** `401`.
+
+---
+
+### Rep points total
+
+- **Method:** `GET`
+- **URL:** `/api/rep/points/total`
+- **Auth:** Yes — Rep
+
+**Success (200):** `{ "success": true, "data": { "total": 0 } }` — sum of `points` for that rep’s transactions.
+
+**Errors:** `401`.
 
 ---
 
