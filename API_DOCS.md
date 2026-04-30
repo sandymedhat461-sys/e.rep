@@ -11,9 +11,9 @@ REST API for the E-Rep (medical rep / doctor / company) platform. All JSON bodie
 
 ## Base URL
 
-| Environment | Base URL |
-|-------------|----------|
-| Local | `http://localhost:8000/api` |
+| Environment     | Base URL                                                  |
+| --------------- | --------------------------------------------------------- |
+| Local           | `http://localhost:8000/api`                               |
 | Testing (ngrok) | `https://embezzle-skedaddle-creatable.ngrok-free.dev/api` |
 
 **Example:** Login URL = `{base}/auth/doctor/login` → `http://localhost:8000/api/auth/doctor/login`
@@ -23,7 +23,7 @@ After login, copy the token from the response.
 Add it to every protected endpoint as a Header:
 Authorization: Bearer {your_token_here}
 
-Note: Each user type has its own token — 
+Note: Each user type has its own token —
 admin token only works on /admin/ routes,
 doctor token only works on /doctor/ routes, etc.
 
@@ -41,12 +41,12 @@ Authorization: Bearer {token}
 
 4. Use the **correct guard** per area (the app uses Laravel Sanctum; each role has its own token ability):
 
-| Area | Header |
-|------|--------|
-| Admin | `Authorization: Bearer {admin_token}` |
-| Company | `Authorization: Bearer {company_token}` |
-| Doctor | `Authorization: Bearer {doctor_token}` |
-| Medical rep | `Authorization: Bearer {rep_token}` |
+| Area        | Header                                  |
+| ----------- | --------------------------------------- |
+| Admin       | `Authorization: Bearer {admin_token}`   |
+| Company     | `Authorization: Bearer {company_token}` |
+| Doctor      | `Authorization: Bearer {doctor_token}`  |
+| Medical rep | `Authorization: Bearer {rep_token}`     |
 
 **Logout** (optional): `POST` to `/api/auth/{role}/logout` with the same `Authorization` header.
 
@@ -56,12 +56,12 @@ Authorization: Bearer {token}
 
 Use these only in non-production environments.
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | `sandy@erep.com` | `password` |
-| Company | `company@pharmaegypt.com` | `password` |
-| Doctor | `doctor1@erep.com` | `password` |
-| Medical rep | `rep1@erep.com` | `password` |
+| Role        | Email                     | Password   |
+| ----------- | ------------------------- | ---------- |
+| Admin       | `sandy@erep.com`          | `password` |
+| Company     | `company@pharmaegypt.com` | `password` |
+| Doctor      | `doctor1@erep.com`        | `password` |
+| Medical rep | `rep1@erep.com`           | `password` |
 
 ---
 
@@ -71,21 +71,21 @@ Responses typically follow:
 
 ```json
 {
-  "success": true,
-  "data": { },
-  "message": "Optional human-readable message"
+    "success": true,
+    "data": {},
+    "message": "Optional human-readable message"
 }
 ```
 
 **Common error shapes**
 
-| HTTP | When | Example body |
-|------|------|----------------|
-| **401** | Missing/invalid token, wrong password | `{ "success": false, "message": "Unauthenticated." }` or `{ "success": false, "message": "Invalid credentials" }` |
-| **403** | Valid auth but not allowed (e.g. pending doctor, blocked user) | `{ "success": false, "message": "Account awaiting admin approval" }` |
-| **404** | Resource not found | `{ "success": false, "message": "Not found" }` |
-| **422** | Validation failed | `{ "success": false, "message": "Validation failed", "errors": { "email": ["The email field is required."] } }` |
-| **500** | Server error | `{ "message": "Server Error" }` |
+| HTTP    | When                                                           | Example body                                                                                                      |
+| ------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **401** | Missing/invalid token, wrong password                          | `{ "success": false, "message": "Unauthenticated." }` or `{ "success": false, "message": "Invalid credentials" }` |
+| **403** | Valid auth but not allowed (e.g. pending doctor, blocked user) | `{ "success": false, "message": "Account awaiting admin approval" }`                                              |
+| **404** | Resource not found                                             | `{ "success": false, "message": "Not found" }`                                                                    |
+| **422** | Validation failed                                              | `{ "success": false, "message": "Validation failed", "errors": { "email": ["The email field is required."] } }`   |
+| **500** | Server error                                                   | `{ "message": "Server Error" }`                                                                                   |
 
 Unless an endpoint specifies otherwise, assume **401** for missing `Authorization: Bearer`, **404** for bad IDs, and **422** for invalid body/query.
 
@@ -93,12 +93,12 @@ Unless an endpoint specifies otherwise, assume **401** for missing `Authorizatio
 
 The API stores Laravel morph map aliases (not fully qualified model class names) for polymorphic relations such as `sender_type`, `receiver_type`, `notifiable_type`, `author_type`, and `user_type`:
 
-| Key | Model |
-|-----|--------|
-| `doctor` | Doctor |
-| `company` | Company |
+| Key           | Model       |
+| ------------- | ----------- |
+| `doctor`      | Doctor      |
+| `company`     | Company     |
 | `medical_rep` | Medical rep |
-| `admin` | Admin |
+| `admin`       | Admin       |
 
 Legacy rows may still use older strings or full class names; list endpoints accept both where applicable.
 
@@ -120,11 +120,11 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "full_name": "Admin User",
-  "email": "newadmin@erep.com",
-  "password": "password",
-  "password_confirmation": "password",
-  "phone": "+201000000099"
+    "full_name": "Admin User",
+    "email": "newadmin@erep.com",
+    "password": "password",
+    "password_confirmation": "password",
+    "phone": "+201000000099"
 }
 ```
 
@@ -132,16 +132,16 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "admin": {
-      "id": 1,
-      "full_name": "Admin User",
-      "email": "newadmin@erep.com",
-      "phone": "+201000000099"
-    },
-    "token": "1|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  }
+    "success": true,
+    "data": {
+        "admin": {
+            "id": 1,
+            "full_name": "Admin User",
+            "email": "newadmin@erep.com",
+            "phone": "+201000000099"
+        },
+        "token": "1|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
 }
 ```
 
@@ -159,8 +159,8 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "email": "sandy@erep.com",
-  "password": "password"
+    "email": "sandy@erep.com",
+    "password": "password"
 }
 ```
 
@@ -168,15 +168,15 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "admin": {
-      "id": 1,
-      "full_name": "Super Admin",
-      "email": "sandy@erep.com"
-    },
-    "token": "2|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  }
+    "success": true,
+    "data": {
+        "admin": {
+            "id": 1,
+            "full_name": "Super Admin",
+            "email": "sandy@erep.com"
+        },
+        "token": "2|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
 }
 ```
 
@@ -196,8 +196,8 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "message": "Logged out successfully"
+    "success": true,
+    "message": "Logged out successfully"
 }
 ```
 
@@ -215,15 +215,15 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "admin": {
-      "id": 1,
-      "full_name": "Super Admin",
-      "email": "sandy@erep.com",
-      "phone": "+201000000001"
+    "success": true,
+    "data": {
+        "admin": {
+            "id": 1,
+            "full_name": "Super Admin",
+            "email": "sandy@erep.com",
+            "phone": "+201000000001"
+        }
     }
-  }
 }
 ```
 
@@ -241,12 +241,12 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "company_name": "New Pharma LLC",
-  "email": "register@newpharma.com",
-  "password": "password",
-  "password_confirmation": "password",
-  "hotline": "+20212345678",
-  "commercial_register": "CREG-EGY-2026-999"
+    "company_name": "New Pharma LLC",
+    "email": "register@newpharma.com",
+    "password": "password",
+    "password_confirmation": "password",
+    "hotline": "+20212345678",
+    "commercial_register": "CREG-EGY-2026-999"
 }
 ```
 
@@ -254,16 +254,16 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "company": {
-      "id": 3,
-      "company_name": "New Pharma LLC",
-      "email": "register@newpharma.com",
-      "status": "pending"
-    },
-    "token": "3|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  }
+    "success": true,
+    "data": {
+        "company": {
+            "id": 3,
+            "company_name": "New Pharma LLC",
+            "email": "register@newpharma.com",
+            "status": "pending"
+        },
+        "token": "3|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
 }
 ```
 
@@ -281,8 +281,8 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "email": "company@pharmaegypt.com",
-  "password": "password"
+    "email": "company@pharmaegypt.com",
+    "password": "password"
 }
 ```
 
@@ -290,16 +290,16 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "company": {
-      "id": 1,
-      "company_name": "Pharma Egypt Co.",
-      "email": "company@pharmaegypt.com",
-      "status": "approved"
-    },
-    "token": "4|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  }
+    "success": true,
+    "data": {
+        "company": {
+            "id": 1,
+            "company_name": "Pharma Egypt Co.",
+            "email": "company@pharmaegypt.com",
+            "status": "approved"
+        },
+        "token": "4|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
 }
 ```
 
@@ -331,15 +331,15 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "company": {
-      "id": 1,
-      "company_name": "Pharma Egypt Co.",
-      "email": "company@pharmaegypt.com",
-      "status": "approved"
+    "success": true,
+    "data": {
+        "company": {
+            "id": 1,
+            "company_name": "Pharma Egypt Co.",
+            "email": "company@pharmaegypt.com",
+            "status": "approved"
+        }
     }
-  }
 }
 ```
 
@@ -357,15 +357,15 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "full_name": "Dr. Example User",
-  "email": "newdoctor@hospital.com",
-  "password": "password",
-  "password_confirmation": "password",
-  "phone": "+201155500001",
-  "national_id": "29001001550001",
-  "specialization": "Cardiology",
-  "hospital_name": "Cairo General",
-  "syndicate_id": "SYN999"
+    "full_name": "Dr. Example User",
+    "email": "newdoctor@hospital.com",
+    "password": "password",
+    "password_confirmation": "password",
+    "phone": "+201155500001",
+    "national_id": "29001001550001",
+    "specialization": "Cardiology",
+    "hospital_name": "Cairo General",
+    "syndicate_id": "SYN999"
 }
 ```
 
@@ -373,16 +373,16 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "doctor": {
-      "id": 10,
-      "full_name": "Dr. Example User",
-      "email": "newdoctor@hospital.com",
-      "status": "pending"
-    },
-    "token": "5|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  }
+    "success": true,
+    "data": {
+        "doctor": {
+            "id": 10,
+            "full_name": "Dr. Example User",
+            "email": "newdoctor@hospital.com",
+            "status": "pending"
+        },
+        "token": "5|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
 }
 ```
 
@@ -400,8 +400,8 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "email": "doctor1@erep.com",
-  "password": "password"
+    "email": "doctor1@erep.com",
+    "password": "password"
 }
 ```
 
@@ -409,17 +409,17 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "doctor": {
-      "id": 1,
-      "full_name": "Dr. Ahmed Sayed",
-      "email": "doctor1@erep.com",
-      "specialization": "Cardiology",
-      "status": "active"
-    },
-    "token": "6|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  }
+    "success": true,
+    "data": {
+        "doctor": {
+            "id": 1,
+            "full_name": "Dr. Ahmed Sayed",
+            "email": "doctor1@erep.com",
+            "specialization": "Cardiology",
+            "status": "active"
+        },
+        "token": "6|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
 }
 ```
 
@@ -451,15 +451,15 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "doctor": {
-      "id": 1,
-      "full_name": "Dr. Ahmed Sayed",
-      "email": "doctor1@erep.com",
-      "specialization": "Cardiology"
+    "success": true,
+    "data": {
+        "doctor": {
+            "id": 1,
+            "full_name": "Dr. Ahmed Sayed",
+            "email": "doctor1@erep.com",
+            "specialization": "Cardiology"
+        }
     }
-  }
 }
 ```
 
@@ -477,7 +477,7 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "syndicate_id": "SYN001"
+    "syndicate_id": "SYN001"
 }
 ```
 
@@ -485,11 +485,11 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "available": true,
-    "message": "Syndicate ID is available"
-  }
+    "success": true,
+    "data": {
+        "available": true,
+        "message": "Syndicate ID is available"
+    }
 }
 ```
 
@@ -507,14 +507,14 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "full_name": "New Rep Name",
-  "email": "newrep@company.com",
-  "password": "password",
-  "password_confirmation": "password",
-  "phone": "+201200000099",
-  "national_id": "29002002002999",
-  "company_id": 1,
-  "category_id": 1
+    "full_name": "New Rep Name",
+    "email": "newrep@company.com",
+    "password": "password",
+    "password_confirmation": "password",
+    "phone": "+201200000099",
+    "national_id": "29002002002999",
+    "company_id": 1,
+    "category_id": 1
 }
 ```
 
@@ -522,18 +522,18 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "rep": {
-      "id": 5,
-      "full_name": "New Rep Name",
-      "email": "newrep@company.com",
-      "company_id": 1,
-      "category_id": 1,
-      "status": "pending"
-    },
-    "token": "7|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  }
+    "success": true,
+    "data": {
+        "rep": {
+            "id": 5,
+            "full_name": "New Rep Name",
+            "email": "newrep@company.com",
+            "company_id": 1,
+            "category_id": 1,
+            "status": "pending"
+        },
+        "token": "7|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
 }
 ```
 
@@ -551,8 +551,8 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "email": "rep1@erep.com",
-  "password": "password"
+    "email": "rep1@erep.com",
+    "password": "password"
 }
 ```
 
@@ -560,17 +560,17 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "rep": {
-      "id": 1,
-      "full_name": "Karim Mostafa",
-      "email": "rep1@erep.com",
-      "company_id": 1,
-      "status": "active"
-    },
-    "token": "8|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  }
+    "success": true,
+    "data": {
+        "rep": {
+            "id": 1,
+            "full_name": "Karim Mostafa",
+            "email": "rep1@erep.com",
+            "company_id": 1,
+            "status": "active"
+        },
+        "token": "8|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
 }
 ```
 
@@ -602,16 +602,16 @@ Public auth routes do **not** require a token. `logout` and `me` require the mat
 
 ```json
 {
-  "success": true,
-  "data": {
-    "rep": {
-      "id": 1,
-      "full_name": "Karim Mostafa",
-      "email": "rep1@erep.com",
-      "company_id": 1,
-      "category_id": 1
+    "success": true,
+    "data": {
+        "rep": {
+            "id": 1,
+            "full_name": "Karim Mostafa",
+            "email": "rep1@erep.com",
+            "company_id": 1,
+            "category_id": 1
+        }
     }
-  }
 }
 ```
 
@@ -635,12 +635,12 @@ All routes require: `Authorization: Bearer {admin_token}`
 
 ```json
 {
-  "success": true,
-  "data": {
-    "pending_doctors": 4,
-    "pending_reps": 2,
-    "pending_companies": 1
-  }
+    "success": true,
+    "data": {
+        "pending_doctors": 4,
+        "pending_reps": 2,
+        "pending_companies": 1
+    }
 }
 ```
 
@@ -660,48 +660,48 @@ Returns a full analytics breakdown: counts for doctors, medical reps, and compan
 
 ```json
 {
-  "success": true,
-  "data": {
-    "doctors": {
-      "total": 0,
-      "active": 0,
-      "pending": 0,
-      "blocked": 0
-    },
-    "medical_reps": {
-      "total": 0,
-      "active": 0,
-      "pending": 0,
-      "blocked": 0
-    },
-    "companies": {
-      "total": 0,
-      "approved": 0,
-      "pending": 0,
-      "blocked": 0
-    },
-    "drugs": { "total": 0 },
-    "meetings": {
-      "total": 0,
-      "completed": 0,
-      "scheduled": 0,
-      "cancelled": 0
-    },
-    "samples": {
-      "total": 0,
-      "pending": 0,
-      "delivered": 0
-    },
-    "events": {
-      "total": 0,
-      "upcoming": 0,
-      "completed": 0
-    },
-    "posts": {
-      "total": 0,
-      "reported": 0
+    "success": true,
+    "data": {
+        "doctors": {
+            "total": 0,
+            "active": 0,
+            "pending": 0,
+            "blocked": 0
+        },
+        "medical_reps": {
+            "total": 0,
+            "active": 0,
+            "pending": 0,
+            "blocked": 0
+        },
+        "companies": {
+            "total": 0,
+            "approved": 0,
+            "pending": 0,
+            "blocked": 0
+        },
+        "drugs": { "total": 0 },
+        "meetings": {
+            "total": 0,
+            "completed": 0,
+            "scheduled": 0,
+            "cancelled": 0
+        },
+        "samples": {
+            "total": 0,
+            "pending": 0,
+            "delivered": 0
+        },
+        "events": {
+            "total": 0,
+            "upcoming": 0,
+            "completed": 0
+        },
+        "posts": {
+            "total": 0,
+            "reported": 0
+        }
     }
-  }
 }
 ```
 
@@ -719,12 +719,12 @@ Returns a full analytics breakdown: counts for doctors, medical reps, and compan
 
 ```json
 {
-  "success": true,
-  "data": {
-    "doctors": [],
-    "reps": [],
-    "companies": []
-  }
+    "success": true,
+    "data": {
+        "doctors": [],
+        "reps": [],
+        "companies": []
+    }
 }
 ```
 
@@ -746,9 +746,9 @@ Returns a full analytics breakdown: counts for doctors, medical reps, and compan
 
 ```json
 {
-  "success": true,
-  "message": "User approved",
-  "data": { "id": 5, "status": "active" }
+    "success": true,
+    "message": "User approved",
+    "data": { "id": 5, "status": "active" }
 }
 ```
 
@@ -768,8 +768,8 @@ Returns a full analytics breakdown: counts for doctors, medical reps, and compan
 
 ```json
 {
-  "success": true,
-  "message": "User blocked"
+    "success": true,
+    "message": "User blocked"
 }
 ```
 
@@ -789,8 +789,8 @@ Deletes a **doctor**, **rep** (medical rep), or **company** account by path `typ
 
 ```json
 {
-  "success": true,
-  "message": "User deleted"
+    "success": true,
+    "message": "User deleted"
 }
 ```
 
@@ -808,15 +808,15 @@ Deletes a **doctor**, **rep** (medical rep), or **company** account by path `typ
 
 ```json
 {
-  "success": true,
-  "data": {
-    "categories": [
-      {
-        "id": 1,
-        "name": "Cardiology"
-      }
-    ]
-  }
+    "success": true,
+    "data": {
+        "categories": [
+            {
+                "id": 1,
+                "name": "Cardiology"
+            }
+        ]
+    }
 }
 ```
 
@@ -834,7 +834,7 @@ Deletes a **doctor**, **rep** (medical rep), or **company** account by path `typ
 
 ```json
 {
-  "name": "Endocrinology"
+    "name": "Endocrinology"
 }
 ```
 
@@ -842,13 +842,13 @@ Deletes a **doctor**, **rep** (medical rep), or **company** account by path `typ
 
 ```json
 {
-  "success": true,
-  "data": {
-    "category": {
-      "id": 6,
-      "name": "Endocrinology"
+    "success": true,
+    "data": {
+        "category": {
+            "id": 6,
+            "name": "Endocrinology"
+        }
     }
-  }
 }
 ```
 
@@ -866,7 +866,7 @@ Deletes a **doctor**, **rep** (medical rep), or **company** account by path `typ
 
 ```json
 {
-  "name": "Endocrinology (updated)"
+    "name": "Endocrinology (updated)"
 }
 ```
 
@@ -958,11 +958,11 @@ Deletes a **doctor**, **rep** (medical rep), or **company** account by path `typ
 
 ```json
 {
-  "company_name": "...",
-  "email": "...",
-  "password": "...",
-  "hotline": "...",
-  "commercial_register": "..."
+    "company_name": "...",
+    "email": "...",
+    "password": "...",
+    "hotline": "...",
+    "commercial_register": "..."
 }
 ```
 
@@ -982,13 +982,13 @@ Deletes a **doctor**, **rep** (medical rep), or **company** account by path `typ
 
 ```json
 {
-  "full_name": "...",
-  "email": "...",
-  "password": "...",
-  "phone": "...",
-  "national_id": "...",
-  "company_id": 1,
-  "category_id": 1
+    "full_name": "...",
+    "email": "...",
+    "password": "...",
+    "phone": "...",
+    "national_id": "...",
+    "company_id": 1,
+    "category_id": 1
 }
 ```
 
@@ -1014,46 +1014,46 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "success": true,
-  "data": {
-    "drugs": {
-      "total": 12,
-      "by_category": []
-    },
-    "reps": {
-      "total": 2,
-      "approved": 2,
-      "pending": 0
-    },
-    "events": {
-      "total": 3,
-      "upcoming": 1,
-      "completed": 2,
-      "total_attendees": 10
-    },
-    "samples": {
-      "total_requests": 7,
-      "pending": 3,
-      "delivered": 4,
-      "by_status": [
-        { "status": "pending", "count": 3 },
-        { "status": "delivered", "count": 4 }
-      ],
-      "top_requested_drugs": [
-        {
-          "drug_id": 5,
-          "requests_count": 4,
-          "drug": { "id": 5, "market_name": "Example Drug" }
-        }
-      ]
-    },
-    "rewards": {
-      "total": 5,
-      "pending_redemptions": 1
-    },
-    "rep_performance": [],
-    "top_drugs": []
-  }
+    "success": true,
+    "data": {
+        "drugs": {
+            "total": 12,
+            "by_category": []
+        },
+        "reps": {
+            "total": 2,
+            "approved": 2,
+            "pending": 0
+        },
+        "events": {
+            "total": 3,
+            "upcoming": 1,
+            "completed": 2,
+            "total_attendees": 10
+        },
+        "samples": {
+            "total_requests": 7,
+            "pending": 3,
+            "delivered": 4,
+            "by_status": [
+                { "status": "pending", "count": 3 },
+                { "status": "delivered", "count": 4 }
+            ],
+            "top_requested_drugs": [
+                {
+                    "drug_id": 5,
+                    "requests_count": 4,
+                    "drug": { "id": 5, "market_name": "Example Drug" }
+                }
+            ]
+        },
+        "rewards": {
+            "total": 5,
+            "pending_redemptions": 1
+        },
+        "rep_performance": [],
+        "top_drugs": []
+    }
 }
 ```
 
@@ -1097,17 +1097,17 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "success": true,
-  "data": {
-    "ingredients": [
-      {
-        "id": 1,
-        "name": "Paracetamol",
-        "description": null,
-        "created_by_company_id": null
-      }
-    ]
-  }
+    "success": true,
+    "data": {
+        "ingredients": [
+            {
+                "id": 1,
+                "name": "Paracetamol",
+                "description": null,
+                "created_by_company_id": null
+            }
+        ]
+    }
 }
 ```
 
@@ -1125,9 +1125,9 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "name": "Custom Ingredient X",
-  "description": "Short description",
-  "side_effect": "May cause drowsiness"
+    "name": "Custom Ingredient X",
+    "description": "Short description",
+    "side_effect": "May cause drowsiness"
 }
 ```
 
@@ -1147,8 +1147,8 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "name": "Custom Ingredient X (v2)",
-  "description": "Updated"
+    "name": "Custom Ingredient X (v2)",
+    "description": "Updated"
 }
 ```
 
@@ -1180,16 +1180,16 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "success": true,
-  "data": {
-    "drugs": [
-      {
-        "id": 1,
-        "market_name": "BrandX",
-        "status": "active"
-      }
-    ]
-  }
+    "success": true,
+    "data": {
+        "drugs": [
+            {
+                "id": 1,
+                "market_name": "BrandX",
+                "status": "active"
+            }
+        ]
+    }
 }
 ```
 
@@ -1207,10 +1207,10 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "market_name": "BrandY",
-  "category_id": 1,
-  "ingredient_ids": [1, 2],
-  "description": "Indications and usage"
+    "market_name": "BrandY",
+    "category_id": 1,
+    "ingredient_ids": [1, 2],
+    "description": "Indications and usage"
 }
 ```
 
@@ -1282,12 +1282,12 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "title": "Cardiology webinar",
-  "description": "Annual update",
-  "starts_at": "2026-05-01T10:00:00Z",
-  "ends_at": "2026-05-01T12:00:00Z",
-  "location": "Online",
-  "max_capacity": 100
+    "title": "Cardiology webinar",
+    "description": "Annual update",
+    "starts_at": "2026-05-01T10:00:00Z",
+    "ends_at": "2026-05-01T12:00:00Z",
+    "location": "Online",
+    "max_capacity": 100
 }
 ```
 
@@ -1371,7 +1371,7 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "reason": "Capacity full"
+    "reason": "Capacity full"
 }
 ```
 
@@ -1391,7 +1391,7 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "doctor_ids": [1, 2]
+    "doctor_ids": [1, 2]
 }
 ```
 
@@ -1437,10 +1437,10 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "name": "Gift voucher",
-  "description": "500 EGP voucher",
-  "points_cost": 500,
-  "quantity_available": 20
+    "name": "Gift voucher",
+    "description": "500 EGP voucher",
+    "points_cost": 500,
+    "quantity_available": 20
 }
 ```
 
@@ -1612,10 +1612,10 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "target_type": "meetings",
-  "target_value": 10,
-  "period_start": "2026-04-01",
-  "period_end": "2026-04-30"
+    "target_type": "meetings",
+    "target_value": 10,
+    "period_start": "2026-04-01",
+    "period_end": "2026-04-30"
 }
 ```
 
@@ -1647,9 +1647,9 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "receiver_type": "doctor",
-  "receiver_id": 1,
-  "body": "Hello from company"
+    "receiver_type": "doctor",
+    "receiver_id": 1,
+    "body": "Hello from company"
 }
 ```
 
@@ -1733,9 +1733,9 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "title": "Company announcement title",
-  "content": "Company announcement text",
-  "tag_id": 2
+    "title": "Company announcement title",
+    "content": "Company announcement text",
+    "tag_id": 2
 }
 ```
 
@@ -1757,17 +1757,15 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "success": true,
-  "data": {
-    "post": {
-      "id": 1,
-      "title": "Company announcement title",
-      "content": "Company announcement text",
-      "tags": [
-        { "id": 1, "name": "Cardiology", "slug": "cardiology" }
-      ]
+    "success": true,
+    "data": {
+        "post": {
+            "id": 1,
+            "title": "Company announcement title",
+            "content": "Company announcement text",
+            "tags": [{ "id": 1, "name": "Cardiology", "slug": "cardiology" }]
+        }
     }
-  }
 }
 ```
 
@@ -1811,7 +1809,7 @@ All routes require: `Authorization: Bearer {company_token}`
 
 ```json
 {
-  "body": "Nice post!"
+    "body": "Nice post!"
 }
 ```
 
@@ -1937,8 +1935,8 @@ All routes require: `Authorization: Bearer {doctor_token}`
 
 ```json
 {
-  "rating": 5,
-  "comment": "Excellent efficacy"
+    "rating": 5,
+    "comment": "Excellent efficacy"
 }
 ```
 
@@ -1970,7 +1968,7 @@ All routes require: `Authorization: Bearer {doctor_token}`
 
 ```json
 {
-  "drug_id": 5
+    "drug_id": 5
 }
 ```
 
@@ -2014,8 +2012,8 @@ All routes require: `Authorization: Bearer {doctor_token}`
 
 ```json
 {
-  "drug_id": 3,
-  "quantity": 2
+    "drug_id": 3,
+    "quantity": 2
 }
 ```
 
@@ -2059,11 +2057,11 @@ All routes require: `Authorization: Bearer {doctor_token}`
 
 ```json
 {
-  "success": true,
-  "data": {
-    "room_url": "https://meet.jit.si/erep-1-abc123",
-    "room_name": "erep-1-abc123"
-  }
+    "success": true,
+    "data": {
+        "room_url": "https://meet.jit.si/erep-1-abc123",
+        "room_name": "erep-1-abc123"
+    }
 }
 ```
 
@@ -2117,7 +2115,7 @@ All routes require: `Authorization: Bearer {doctor_token}`
 
 ```json
 {
-  "event_id": 1
+    "event_id": 1
 }
 ```
 
@@ -2181,17 +2179,17 @@ All routes require: `Authorization: Bearer {doctor_token}`
 
 ```json
 {
-  "success": true,
-  "data": {
-    "points": [
-      {
-        "id": 1,
-        "points": 10,
-        "description": "Meeting completed with rep",
-        "source_type": "meeting"
-      }
-    ]
-  }
+    "success": true,
+    "data": {
+        "points": [
+            {
+                "id": 1,
+                "points": 10,
+                "description": "Meeting completed with rep",
+                "source_type": "meeting"
+            }
+        ]
+    }
 }
 ```
 
@@ -2255,26 +2253,26 @@ Creates a redemption if the authenticated doctor’s total points (sum of `docto
 
 ```json
 {
-  "success": true,
-  "data": {
-    "redemption": {
-      "id": 1,
-      "doctor_id": 1,
-      "reward_id": 2,
-      "points_spent": 100,
-      "status": "pending",
-      "redeemed_at": "2026-04-28T12:00:00.000000Z"
+    "success": true,
+    "data": {
+        "redemption": {
+            "id": 1,
+            "doctor_id": 1,
+            "reward_id": 2,
+            "points_spent": 100,
+            "status": "pending",
+            "redeemed_at": "2026-04-28T12:00:00.000000Z"
+        }
     }
-  }
 }
 ```
 
 **Errors:**
 
-| HTTP | When |
-|------|------|
-| **401** | Missing or invalid doctor token |
-| **404** | `{ "success": false, "message": "Reward not found" }` — unknown `rewardId` |
+| HTTP    | When                                                                                            |
+| ------- | ----------------------------------------------------------------------------------------------- |
+| **401** | Missing or invalid doctor token                                                                 |
+| **404** | `{ "success": false, "message": "Reward not found" }` — unknown `rewardId`                      |
 | **422** | `{ "success": false, "message": "Insufficient points" }` — total points below `points_required` |
 
 ---
@@ -2301,9 +2299,9 @@ Creates a redemption if the authenticated doctor’s total points (sum of `docto
 
 ```json
 {
-  "title": "Clinical experience",
-  "content": "Sharing clinical experience",
-  "tag_id": 1
+    "title": "Clinical experience",
+    "content": "Sharing clinical experience",
+    "tag_id": 1
 }
 ```
 
@@ -2325,17 +2323,15 @@ Creates a redemption if the authenticated doctor’s total points (sum of `docto
 
 ```json
 {
-  "success": true,
-  "data": {
-    "post": {
-      "id": 1,
-      "title": "Clinical experience",
-      "content": "Sharing clinical experience",
-      "tags": [
-        { "id": 1, "name": "Cardiology", "slug": "cardiology" }
-      ]
+    "success": true,
+    "data": {
+        "post": {
+            "id": 1,
+            "title": "Clinical experience",
+            "content": "Sharing clinical experience",
+            "tags": [{ "id": 1, "name": "Cardiology", "slug": "cardiology" }]
+        }
     }
-  }
 }
 ```
 
@@ -2379,7 +2375,7 @@ Creates a redemption if the authenticated doctor’s total points (sum of `docto
 
 ```json
 {
-  "reason": "Inappropriate content"
+    "reason": "Inappropriate content"
 }
 ```
 
@@ -2461,8 +2457,8 @@ Creates a redemption if the authenticated doctor’s total points (sum of `docto
 
 ```json
 {
-  "receiver_rep_id": 1,
-  "content": "Hello rep"
+    "receiver_rep_id": 1,
+    "content": "Hello rep"
 }
 ```
 
@@ -2534,13 +2530,13 @@ Creates a redemption if the authenticated doctor’s total points (sum of `docto
 
 ```json
 {
-  "success": true,
-  "data": {
-    "report": {
-      "summary": {},
-      "generated_at": "2026-04-18T12:00:00Z"
+    "success": true,
+    "data": {
+        "report": {
+            "summary": {},
+            "generated_at": "2026-04-18T12:00:00Z"
+        }
     }
-  }
 }
 ```
 
@@ -2654,9 +2650,9 @@ Returns point ledger rows for the authenticated rep (`point_transactions` with `
 
 ```json
 {
-  "doctor_id": 1,
-  "scheduled_at": "2026-05-10T14:00:00Z",
-  "notes": "Product discussion"
+    "doctor_id": 1,
+    "scheduled_at": "2026-05-10T14:00:00Z",
+    "notes": "Product discussion"
 }
 ```
 
@@ -2690,15 +2686,15 @@ Returns point ledger rows for the authenticated rep (`point_transactions` with `
 
 ```json
 {
-  "success": true,
-  "message": "Meeting completed",
-  "data": {
-    "meeting": {
-      "id": 1,
-      "status": "completed",
-      "points_awarded": 10
+    "success": true,
+    "message": "Meeting completed",
+    "data": {
+        "meeting": {
+            "id": 1,
+            "status": "completed",
+            "points_awarded": 10
+        }
     }
-  }
 }
 ```
 
@@ -2856,7 +2852,7 @@ Returns point ledger rows for the authenticated rep (`point_transactions` with `
 
 ```json
 {
-  "doctor_id": 1
+    "doctor_id": 1
 }
 ```
 
@@ -2904,17 +2900,15 @@ Returns point ledger rows for the authenticated rep (`point_transactions` with `
 
 ```json
 {
-  "success": true,
-  "data": {
-    "post": {
-      "id": 1,
-      "title": "Rep update",
-      "content": "Rep post text",
-      "tags": [
-        { "id": 1, "name": "Cardiology", "slug": "cardiology" }
-      ]
+    "success": true,
+    "data": {
+        "post": {
+            "id": 1,
+            "title": "Rep update",
+            "content": "Rep post text",
+            "tags": [{ "id": 1, "name": "Cardiology", "slug": "cardiology" }]
+        }
     }
-  }
 }
 ```
 
@@ -2956,7 +2950,7 @@ Returns point ledger rows for the authenticated rep (`point_transactions` with `
 
 ```json
 {
-  "reason": "Spam"
+    "reason": "Spam"
 }
 ```
 
@@ -3038,9 +3032,9 @@ Returns point ledger rows for the authenticated rep (`point_transactions` with `
 
 ```json
 {
-  "receiver_type": "doctor",
-  "receiver_id": 1,
-  "body": "Follow-up after visit"
+    "receiver_type": "doctor",
+    "receiver_id": 1,
+    "body": "Follow-up after visit"
 }
 ```
 
@@ -3106,4 +3100,4 @@ Persisted polymorphic keys: `sender_type` `medical_rep`, `receiver_type` `doctor
 
 ---
 
-*Generated for the E-Rep Laravel API. Field names and nested keys are illustrative; always confirm against live responses and OpenAPI / `l5-swagger` if published.*
+_Generated for the E-Rep Laravel API. Field names and nested keys are illustrative; always confirm against live responses and OpenAPI / `l5-swagger` if published._
