@@ -18,6 +18,7 @@ class Meeting extends Model
         'room_name',
         'scheduled_at',
         'points_awarded',
+        'type',
     ];
 
     protected function casts(): array

@@ -168,6 +168,36 @@ class PostController extends BaseCompanyController
     }
 
 
+    public function comment(Request $request, int $id): JsonResponse
+    {
+        $company = $this->companyOrForbidden();
+        if ($company instanceof JsonResponse) {
+            return $company;
+        }
+
+        if (!Post::whereKey($id)->exists()) {
+            return $this->error('Post not found', 404);
+        }
+
+        $validated = $this->validateRequest($request, [
+            'content' => ['required', 'string', 'max:1000'],
+        ]);
+        if ($validated instanceof JsonResponse) {
+            return $validated;
+        }
+
+        $comment = Comment::create([
+            'post_id' => $id,
+            'user_type' => 'company',
+            'user_id' => $company->id,
+            'comment_text' => $validated['content'],
+        ]);
+
+        Post::whereKey($id)->increment('comments_count');
+        return $this->success(['comment' => $comment], null, 201);
+    }
+
+
     public function like(int $postId): JsonResponse
     {
         $company = $this->companyOrForbidden();

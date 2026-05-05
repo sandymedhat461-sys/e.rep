@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class MeetingController extends Controller
 {
-   
+
     public function index(Request $request): JsonResponse
     {
         $query = Meeting::query()
@@ -24,7 +24,7 @@ class MeetingController extends Controller
         return $this->success(['meetings' => $query->latest()->get()]);
     }
 
-    
+
     public function show(Request $request, int $id): JsonResponse
     {
         $meeting = Meeting::query()
@@ -39,7 +39,7 @@ class MeetingController extends Controller
         return $this->success(['meeting' => $meeting]);
     }
 
-    
+
     public function getVideoRoom(int $id): JsonResponse
     {
         $doctor = auth('doctor-api')->user();
@@ -65,5 +65,28 @@ class MeetingController extends Controller
             'room_url' => 'https://meet.jit.si/' . $meeting->room_name,
             'room_name' => $meeting->room_name,
         ]);
+    }
+
+    public function store(Request $request): JsonResponse
+    {
+        $validated = $this->validateRequest($request, [
+            'rep_id' => ['required', 'exists:medical_reps,id'],
+            'date'   => ['required', 'date'],
+            'time'   => ['required', 'string'],
+            'type'   => ['required', 'in:Online,Offline'],
+        ]);
+        if ($validated instanceof JsonResponse) {
+            return $validated;
+        }
+
+        $meeting = Meeting::create([
+            'doctor_id'    => $request->user()->id,
+            'rep_id'       => $validated['rep_id'],
+            'scheduled_at' => $validated['date'] . ' ' . $validated['time'],
+            'type'         => $validated['type'],
+            'status'       => 'pending',
+        ]);
+
+        return $this->success(['meeting' => $meeting], null, 201);
     }
 }

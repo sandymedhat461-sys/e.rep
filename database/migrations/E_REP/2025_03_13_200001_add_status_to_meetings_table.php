@@ -16,6 +16,7 @@ return new class extends Migration
             $table->enum('status', ['scheduled', 'completed', 'cancelled'])
                 ->default('scheduled')
                 ->after('rep_id');
+            $table->string('type')->default('Offline')->after('status');
         });
     }
 
@@ -26,6 +27,7 @@ return new class extends Migration
     {
         Schema::table('meetings', function (Blueprint $table) {
             $table->dropColumn('status');
+            $table->dropColumn('type');
         });
     }
 };

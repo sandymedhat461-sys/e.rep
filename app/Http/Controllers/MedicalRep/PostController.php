@@ -176,6 +176,36 @@ class PostController extends BaseMedicalRepController
     }
 
 
+    public function comment(Request $request, int $id): JsonResponse
+    {
+        $rep = $this->repOrForbidden();
+        if ($rep instanceof JsonResponse) {
+            return $rep;
+        }
+
+        if (!Post::whereKey($id)->exists()) {
+            return $this->error('Post not found', 404);
+        }
+
+        $validated = $this->validateRequest($request, [
+            'content' => ['required', 'string', 'max:1000'],
+        ]);
+        if ($validated instanceof JsonResponse) {
+            return $validated;
+        }
+
+        $comment = Comment::create([
+            'post_id' => $id,
+            'user_type' => 'medical_rep',
+            'user_id' => $rep->id,
+            'comment_text' => $validated['content'],
+        ]);
+
+        Post::whereKey($id)->increment('comments_count');
+        return $this->success(['comment' => $comment], null, 201);
+    }
+
+
     public function like(int $postId): JsonResponse
     {
         $rep = $this->repOrForbidden();

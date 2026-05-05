@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\PostReport;
 use App\Models\PostShare;
@@ -142,6 +143,31 @@ class PostController extends Controller
         ]);
 
         return $this->success([], 'Post reported', 201);
+    }
+
+    public function comment(Request $request, int $id): JsonResponse
+    {
+        $post = Post::find($id);
+        if (!$post) {
+            return $this->error('Post not found', 404);
+        }
+
+        $validated = $this->validateRequest($request, [
+            'content' => ['required', 'string', 'max:1000'],
+        ]);
+        if ($validated instanceof JsonResponse) {
+            return $validated;
+        }
+
+        $comment = Comment::create([
+            'post_id' => $id,
+            'user_type' => 'doctor',
+            'user_id' => $request->user()->id,
+            'comment_text' => $validated['content'],
+        ]);
+
+        Post::whereKey($id)->increment('comments_count');
+        return $this->success(['comment' => $comment], null, 201);
     }
 
     public function share(Request $request, int $id): JsonResponse

@@ -1952,10 +1952,30 @@ Changes company password after verifying current password.
 
 ---
 
+### Company comment on post
+
+- **Method:** `POST`
+- **URL:** `/api/company/posts/{id}/comment`
+- **Auth:** Yes — Company
+
+**Body:**
+
+```json
+{
+    "content": "Nice post!"
+}
+```
+
+**Success (201):** `{ "success": true, "data": { "comment": { "id": 1 } } }`
+
+**Errors:** `401`, `404`, `422`.
+
+---
+
 ### Company like post
 
 - **Method:** `POST`
-- **URL:** `/api/company/posts/{postId}/like`
+- **URL:** `/api/company/posts/{id}/like`
 - **Auth:** Yes — Company
 
 **Success (200):** `{ "success": true, "data": { "liked": true } }`
@@ -2570,6 +2590,26 @@ Creates a redemption if the authenticated doctor’s total points (sum of `docto
 **Success (201):** `{ "success": true, "message": "Post shared" }`
 
 **Errors:** `401`, `404`, `409`.
+
+---
+
+### Doctor comment on post
+
+- **Method:** `POST`
+- **URL:** `/api/doctor/posts/{id}/comment`
+- **Auth:** Yes — Doctor
+
+**Body:**
+
+```json
+{
+    "content": "Comment text"
+}
+```
+
+**Success (201):** `{ "success": true, "data": { "comment": { "id": 1 } } }`
+
+**Errors:** `401`, `404`, `422`.
 
 ---
 
@@ -3193,6 +3233,26 @@ Returns point ledger rows for the authenticated rep (`point_transactions` with `
 
 ---
 
+### Rep comment on post
+
+- **Method:** `POST`
+- **URL:** `/api/rep/posts/{id}/comment`
+- **Auth:** Yes — Rep
+
+**Body:**
+
+```json
+{
+    "content": "Comment"
+}
+```
+
+**Success (201):** `{ "success": true, "data": { "comment": { "id": 1 } } }`
+
+**Errors:** `401`, `404`, `422`.
+
+---
+
 ### Rep delete comment
 
 - **Method:** `DELETE`
@@ -3208,7 +3268,7 @@ Returns point ledger rows for the authenticated rep (`point_transactions` with `
 ### Rep like post
 
 - **Method:** `POST`
-- **URL:** `/api/rep/posts/{postId}/like`
+- **URL:** `/api/rep/posts/{id}/like`
 - **Auth:** Yes — Rep
 
 **Success (200):** `{ "success": true, "data": { "liked": true } }`
@@ -3220,7 +3280,7 @@ Returns point ledger rows for the authenticated rep (`point_transactions` with `
 ### Rep unlike post
 
 - **Method:** `DELETE`
-- **URL:** `/api/rep/posts/{postId}/unlike`
+- **URL:** `/api/rep/posts/{id}/like`
 - **Auth:** Yes — Rep
 
 **Success (200):** `{ "success": true, "data": { "liked": false } }`

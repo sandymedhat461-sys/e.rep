@@ -130,6 +130,7 @@ Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
     Route::get('/meetings', [MeetingController::class, 'index']);
     Route::get('/meetings/{id}', [MeetingController::class, 'show']);
     Route::get('/meetings/{id}/video-room', [MeetingController::class, 'getVideoRoom']);
+    Route::post('/meetings', [MeetingController::class, 'store']);
 
     Route::get('/report/generate', [ReportController::class, 'generate']);
 
@@ -158,6 +159,7 @@ Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
     Route::delete('/posts/{id}', [PostController::class, 'destroy']);
     Route::post('/posts/{id}/report', [PostController::class, 'report']);
     Route::post('/posts/{id}/share', [PostController::class, 'share']);
+    Route::post('/posts/{id}/comment', [PostController::class, 'comment']);
 
     Route::post('/posts/{postId}/comments', [CommentController::class, 'store']);
     Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
@@ -235,8 +237,9 @@ Route::prefix('company')->middleware('auth:company-api')->group(function () {
     Route::delete('/posts/{id}', [CompanyPostController::class, 'destroy']);
     Route::post('/posts/{postId}/comments', [CompanyPostController::class, 'storeComment']);
     Route::delete('/comments/{id}', [CompanyPostController::class, 'destroyComment']);
-    Route::post('/posts/{postId}/like', [CompanyPostController::class, 'like']);
-    Route::delete('/posts/{postId}/unlike', [CompanyPostController::class, 'unlike']);
+    Route::post('/posts/{id}/comment', [CompanyPostController::class, 'comment']);
+    Route::post('/posts/{id}/like', [CompanyPostController::class, 'like']);
+    Route::delete('/posts/{id}/like', [CompanyPostController::class, 'unlike']);
     Route::post('/posts/{id}/share', [CompanyPostController::class, 'share']);
 
     Route::get('/notifications', [CompanyNotificationController::class, 'index']);
@@ -284,10 +287,11 @@ Route::prefix('rep')->middleware('auth:rep-api')->group(function () {
     Route::delete('/posts/{id}', [MedicalRepPostController::class, 'destroy']);
     Route::post('/posts/{id}/report', [MedicalRepPostController::class, 'report']);
     Route::post('/posts/{id}/share', [MedicalRepPostController::class, 'share']);
+    Route::post('/posts/{id}/comment', [MedicalRepPostController::class, 'comment']);
     Route::post('/posts/{postId}/comments', [MedicalRepPostController::class, 'storeComment']);
     Route::delete('/comments/{id}', [MedicalRepPostController::class, 'destroyComment']);
-    Route::post('/posts/{postId}/like', [MedicalRepPostController::class, 'like']);
-    Route::delete('/posts/{postId}/unlike', [MedicalRepPostController::class, 'unlike']);
+    Route::post('/posts/{id}/like', [MedicalRepPostController::class, 'like']);
+    Route::delete('/posts/{id}/like', [MedicalRepPostController::class, 'unlike']);
 
     Route::get('/messages', [MedicalRepMessageController::class, 'index']);
     Route::post('/messages', [MedicalRepMessageController::class, 'store']);

@@ -2933,7 +2933,7 @@
                 ]
             }
         },
-        "/api/company/posts/{postId}/like": {
+        "/api/company/posts/{id}/like": {
             "post": {
                 "tags": [
                     "Company - Posts"
@@ -2942,7 +2942,7 @@
                 "operationId": "100a48137bdf67496fd3a9c20919ffb3",
                 "parameters": [
                     {
-                        "name": "postId",
+                        "name": "id",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -2971,7 +2971,7 @@
                 ]
             }
         },
-        "/api/company/posts/{postId}/unlike": {
+        "/api/company/posts/{id}/like": {
             "delete": {
                 "tags": [
                     "Company - Posts"
@@ -2980,7 +2980,7 @@
                 "operationId": "20ca225d0ed8f3cf10aea576de63cd2c",
                 "parameters": [
                     {
-                        "name": "postId",
+                        "name": "id",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -2994,6 +2994,59 @@
                     },
                     "404": {
                         "description": "Like not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/company/posts/{id}/comment": {
+            "post": {
+                "tags": [
+                    "Company - Posts"
+                ],
+                "summary": "Comment on post",
+                "operationId": "commentCompanyPost",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "content": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "content"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "404": {
+                        "description": "Post not found"
                     },
                     "401": {
                         "description": "Unauthenticated"
@@ -4334,6 +4387,63 @@
                         "bearerAuth": []
                     }
                 ]
+            },
+            "post": {
+                "tags": [
+                    "Doctor - Meetings"
+                ],
+                "summary": "Create a meeting request",
+                "operationId": "createMeeting",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "rep_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-06-01"
+                                    },
+                                    "time": {
+                                        "type": "string",
+                                        "example": "14:00"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": ["Online", "Offline"],
+                                        "example": "Online"
+                                    }
+                                },
+                                "required": ["rep_id", "date", "time", "type"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Meeting created"
+                    },
+                    "422": {
+                        "description": "Validation failed"
+                    },
+                    "404": {
+                        "description": "Rep not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/doctor/meetings/{id}": {
@@ -4849,6 +4959,59 @@
                     },
                     "409": {
                         "description": "Already shared"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/doctor/posts/{id}/comment": {
+            "post": {
+                "tags": [
+                    "Doctor - Posts"
+                ],
+                "summary": "Comment on post",
+                "operationId": "commentDoctorPost",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "content": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "content"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "404": {
+                        "description": "Post not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -6340,7 +6503,7 @@
                 ]
             }
         },
-        "/api/rep/posts/{postId}/like": {
+        "/api/rep/posts/{id}/like": {
             "post": {
                 "tags": [
                     "Rep - Posts"
@@ -6349,7 +6512,7 @@
                 "operationId": "419d1cd5a1502db0d8aed1d98323ab68",
                 "parameters": [
                     {
-                        "name": "postId",
+                        "name": "id",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -6378,7 +6541,7 @@
                 ]
             }
         },
-        "/api/rep/posts/{postId}/unlike": {
+        "/api/rep/posts/{id}/like": {
             "delete": {
                 "tags": [
                     "Rep - Posts"
@@ -6387,7 +6550,7 @@
                 "operationId": "af0edb9995bbfa484ec51cb52c9f9c48",
                 "parameters": [
                     {
-                        "name": "postId",
+                        "name": "id",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -6401,6 +6564,59 @@
                     },
                     "404": {
                         "description": "Like not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/rep/posts/{id}/comment": {
+            "post": {
+                "tags": [
+                    "Rep - Posts"
+                ],
+                "summary": "Comment on post",
+                "operationId": "commentRepPost",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "content": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "content"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "404": {
+                        "description": "Post not found"
                     },
                     "401": {
                         "description": "Unauthenticated"
