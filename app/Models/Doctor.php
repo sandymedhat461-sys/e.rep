@@ -38,11 +38,6 @@ class Doctor extends Authenticatable
         ];
     }
 
-    public function rewardRedemptions(): HasMany
-    {
-        return $this->hasMany(RewardRedemption::class);
-    }
-
     public function drugReviews(): HasMany
     {
         return $this->hasMany(DrugReview::class);

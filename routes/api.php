@@ -24,8 +24,6 @@ use App\Http\Controllers\Doctor\NotificationController;
 use App\Http\Controllers\Doctor\PostController;
 use App\Http\Controllers\Doctor\PostLikeController;
 use App\Http\Controllers\Doctor\ProfileController as DoctorProfileController;
-use App\Http\Controllers\Doctor\RewardController;
-use App\Http\Controllers\Doctor\RewardRedemptionController;
 use App\Http\Controllers\Company\ActiveIngredientController as CompanyActiveIngredientController;
 use App\Http\Controllers\Company\DrugController as CompanyDrugController;
 use App\Http\Controllers\Company\EventController as CompanyEventController;
@@ -34,8 +32,6 @@ use App\Http\Controllers\Company\EventRequestController as CompanyEventRequestCo
 use App\Http\Controllers\Company\MedicalRepController as CompanyMedicalRepController;
 use App\Http\Controllers\Company\NotificationController as CompanyNotificationController;
 use App\Http\Controllers\Company\PostController as CompanyPostController;
-use App\Http\Controllers\Company\RewardController as CompanyRewardController;
-use App\Http\Controllers\Company\RewardRedemptionController as CompanyRewardRedemptionController;
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 use App\Http\Controllers\Company\MessageController as CompanyMessageController;
 use App\Http\Controllers\Company\ProfileController as CompanyProfileController;
@@ -102,6 +98,7 @@ Route::prefix('admin')->middleware('auth:admin-api')->group(function () {
     Route::get('/reps', [UserManagementController::class, 'listReps']);
     Route::get('/companies', [UserManagementController::class, 'listCompanies']);
     Route::post('/companies', [UserManagementController::class, 'createCompany']);
+    Route::post('/users/doctors', [UserManagementController::class, 'createDoctor']);
     Route::post('/reps', [UserManagementController::class, 'createRep']);
 
     Route::get('/profile', [AdminProfileController::class, 'show']);
@@ -146,11 +143,6 @@ Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
 
     Route::get('/points', [DoctorPointController::class, 'index']);
     Route::get('/points/total', [DoctorPointController::class, 'total']);
-
-    Route::get('/rewards', [RewardController::class, 'index']);
-
-    Route::get('/redemptions', [RewardRedemptionController::class, 'index']);
-    Route::post('/rewards/{rewardId}/redeem', [RewardRedemptionController::class, 'redeem']);
 
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/posts', [PostController::class, 'store']);
@@ -210,19 +202,6 @@ Route::prefix('company')->middleware('auth:company-api')->group(function () {
 
     Route::post('/events/{eventId}/invite', [CompanyEventInvitationController::class, 'invite']);
     Route::get('/events/{eventId}/invitations', [CompanyEventInvitationController::class, 'index']);
-
-    Route::get('/rewards', [CompanyRewardController::class, 'index']);
-    Route::post('/rewards', [CompanyRewardController::class, 'store']);
-    Route::get('/rewards/{id}', [CompanyRewardController::class, 'show']);
-    Route::put('/rewards/{id}', [CompanyRewardController::class, 'update']);
-    Route::delete('/rewards/{id}', [CompanyRewardController::class, 'destroy']);
-
-    Route::get('/redemptions', [CompanyRewardRedemptionController::class, 'index']);
-    Route::post('/redemptions/{id}/approve', [CompanyRewardRedemptionController::class, 'approve']);
-    Route::post('/redemptions/{id}/reject', [CompanyRewardRedemptionController::class, 'reject']);
-    Route::post('/redemptions/{id}/deliver', [CompanyRewardRedemptionController::class, 'deliver']);
-    Route::post('/redemptions/{id}/fulfill', [CompanyRewardRedemptionController::class, 'fulfill']);
-    Route::post('/redemptions/{id}/cancel', [CompanyRewardRedemptionController::class, 'cancel']);
 
     Route::get('/reps', [CompanyMedicalRepController::class, 'index']);
     Route::get('/reps/{id}', [CompanyMedicalRepController::class, 'show']);

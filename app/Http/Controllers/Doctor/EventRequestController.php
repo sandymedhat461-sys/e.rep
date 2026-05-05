@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 class EventRequestController extends Controller
 {
-   
+
     public function index(Request $request): JsonResponse
     {
         $requests = EventRequest::query()
@@ -24,7 +24,7 @@ class EventRequestController extends Controller
         return $this->success(['requests' => $requests]);
     }
 
-    
+
     public function store(Request $request): JsonResponse
     {
         $validated = $this->validateRequest($request, [
@@ -42,35 +42,43 @@ class EventRequestController extends Controller
             return $this->error('Event not found', 404);
         }
 
-        if ($event->points_required) {
-            $totalPoints = DoctorPoint::where('doctor_id', $doctorId)->sum('value');
-            if ($totalPoints < $event->points_required) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Insufficient points to attend this event. Required: '.$event->points_required,
-                ], 422);
-            }
+        $totalPoints = DoctorPoint::where('doctor_id', $doctorId)->sum('value');
+
+        if ($event->points_required && $totalPoints < $event->points_required) {
+            return $this->error('Not enough points', 403);
         }
 
-        $alreadyRequested = EventRequest::where('doctor_id', $doctorId)->where('event_id', $eventId)->exists();
-        if ($alreadyRequested) {
-            return $this->error('Already registered for this event', 422);
-        }
-
-        $acceptedInvitation = EventInvitation::where('doctor_id', $doctorId)
+        $alreadyRequested = EventRequest::where('doctor_id', $doctorId)
             ->where('event_id', $eventId)
-            ->where('status', 'accepted')
             ->exists();
-        if ($acceptedInvitation) {
-            return $this->error('Already invited and accepted', 422);
+
+        if ($alreadyRequested) {
+            return $this->success([
+                'message' => 'Already registered',
+                'already' => true
+            ], null, 200);
         }
 
         $eventRequest = EventRequest::create([
             'doctor_id' => $doctorId,
-            'event_id' => $eventId,
-            'status' => 'pending',
+            'event_id'  => $eventId,
+            'status'    => 'pending',
         ]);
 
-        return $this->success(['request' => $eventRequest], null, 201);
+        if ($event->points_required) {
+            DoctorPoint::create([
+                'doctor_id' => $doctorId,
+                'source'    => 'event',
+                'source_id' => $event->id,
+                'value'     => - ((int) $event->points_required),
+            ]);
+        }
+
+        $newTotal = DoctorPoint::where('doctor_id', $doctorId)->sum('value');
+
+        return $this->success([
+            'request'      => $eventRequest,
+            'total_points' => $newTotal,
+        ], null, 201);
     }
 }

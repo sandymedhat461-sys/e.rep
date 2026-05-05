@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
+use App\Models\DoctorPoint;
 use App\Models\Meeting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -85,6 +86,14 @@ class MeetingController extends Controller
             'scheduled_at' => $validated['date'] . ' ' . $validated['time'],
             'type'         => $validated['type'],
             'status'       => 'pending',
+        ]);
+
+        DoctorPoint::create([
+            'doctor_id' => $request->user()->id,
+            'source' => 'meeting',
+            'source_id' => $meeting->id,
+            'value' => 20,
+            'description' => 'Points earned from meeting request',
         ]);
 
         return $this->success(['meeting' => $meeting], null, 201);

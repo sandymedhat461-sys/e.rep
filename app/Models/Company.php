@@ -34,11 +34,6 @@ class Company extends Authenticatable
         ];
     }
 
-    public function rewards(): HasMany
-    {
-        return $this->hasMany(Reward::class);
-    }
-
     public function events(): HasMany
     {
         return $this->hasMany(Event::class);

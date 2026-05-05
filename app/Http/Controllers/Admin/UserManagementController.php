@@ -12,7 +12,7 @@ use Throwable;
 
 class UserManagementController extends Controller
 {
-    
+
     public function index(): JsonResponse
     {
         return response()->json([
@@ -164,6 +164,44 @@ class UserManagementController extends Controller
         ], null, 201);
     }
 
+    public function createDoctor(Request $request): JsonResponse
+    {
+        $validated = $this->validateRequest($request, [
+            'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:doctors,email'],
+            'password' => ['required', 'string', 'min:8'],
+            'phone' => ['required', 'string'],
+            'national_id' => ['required', 'string', 'unique:doctors,national_id'],
+            'specialization' => ['required', 'string', 'max:100'],
+            'hospital_name' => ['required', 'string', 'max:255'],
+            'syndicate_id' => ['required', 'string', 'unique:doctors,syndicate_id'],
+        ]);
+        if ($validated instanceof JsonResponse) {
+            return $validated;
+        }
+
+        $doctor = Doctor::create([
+            'full_name' => $validated['full_name'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
+            'phone' => $validated['phone'],
+            'national_id' => $validated['national_id'],
+            'specialization' => $validated['specialization'],
+            'hospital_name' => $validated['hospital_name'],
+            'syndicate_id' => $validated['syndicate_id'],
+            'status' => 'active',
+        ]);
+
+        return $this->success([
+            'doctor' => [
+                'id' => $doctor->id,
+                'full_name' => $doctor->full_name,
+                'email' => $doctor->email,
+                'status' => $doctor->status,
+            ],
+        ], null, 201);
+    }
+
     public function createRep(Request $request): JsonResponse
     {
         $validated = $this->validateRequest($request, [
@@ -211,4 +249,3 @@ class UserManagementController extends Controller
         };
     }
 }
-

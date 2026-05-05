@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class DrugReviewController extends Controller
 {
-   
+
     public function index(int $drugId): JsonResponse
     {
         if (!Drug::whereKey($drugId)->exists()) {
@@ -27,7 +27,7 @@ class DrugReviewController extends Controller
         return $this->success(['reviews' => $reviews]);
     }
 
-    
+
     public function store(Request $request, int $drugId): JsonResponse
     {
         if (!Drug::whereKey($drugId)->exists()) {
@@ -62,7 +62,8 @@ class DrugReviewController extends Controller
             'doctor_id' => $doctorId,
             'source' => 'review',
             'source_id' => $review->id,
-            'value' => 5,
+            'value' => 20,
+            'description' => 'Points earned from drug review',
         ]);
 
         return $this->success(['review' => $review], null, 201);

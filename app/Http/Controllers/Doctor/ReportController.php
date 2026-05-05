@@ -7,7 +7,6 @@ use App\Models\DoctorPoint;
 use App\Models\DrugSample;
 use App\Models\EventRequest;
 use App\Models\Meeting;
-use App\Models\RewardRedemption;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,13 +34,10 @@ class ReportController extends Controller
                 ->where('status', 'approved')
                 ->with(['event:id,title,event_date'])
                 ->get(),
-            'redemptions' => RewardRedemption::where('doctor_id', $doctor->id)
-                ->with(['reward:id,title,name,points_required'])
-                ->get(),
         ];
 
         $pdf = Pdf::loadView('pdf.doctor_report', $data);
 
-        return $pdf->download('erep-report-'.$doctor->id.'.pdf');
+        return $pdf->download('erep-report-' . $doctor->id . '.pdf');
     }
 }

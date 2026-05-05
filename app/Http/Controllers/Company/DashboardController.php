@@ -9,8 +9,7 @@ use App\Models\EventRequest;
 use App\Models\MedicalRep;
 use App\Models\Meeting;
 use App\Models\RepTarget;
-use App\Models\Reward;
-use App\Models\RewardRedemption;
+
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +38,7 @@ class DashboardController extends BaseCompanyController
             )
             ->groupBy('drugs.category_id')
             ->get()
-            ->map(fn ($row) => [
+            ->map(fn($row) => [
                 'category_id' => $row->category_id,
                 'category_name' => $row->category_name,
                 'total' => (int) $row->total,
@@ -67,18 +66,18 @@ class DashboardController extends BaseCompanyController
 
         $totalAttendees = EventRequest::query()
             ->where('status', 'approved')
-            ->whereHas('event', fn ($q) => $q->where('company_id', $companyId))
+            ->whereHas('event', fn($q) => $q->where('company_id', $companyId))
             ->count();
 
         $samplesTotal = DrugSample::query()
-            ->whereHas('drug', fn ($q) => $q->where('company_id', $companyId))
+            ->whereHas('drug', fn($q) => $q->where('company_id', $companyId))
             ->count();
         $samplesPending = DrugSample::query()
-            ->whereHas('drug', fn ($q) => $q->where('company_id', $companyId))
+            ->whereHas('drug', fn($q) => $q->where('company_id', $companyId))
             ->where('status', 'pending')
             ->count();
         $samplesDelivered = DrugSample::query()
-            ->whereHas('drug', fn ($q) => $q->where('company_id', $companyId))
+            ->whereHas('drug', fn($q) => $q->where('company_id', $companyId))
             ->where('status', 'delivered')
             ->count();
 
@@ -98,12 +97,6 @@ class DashboardController extends BaseCompanyController
             ->with('drug:id,market_name')
             ->limit(5)
             ->get();
-
-        $rewardsTotal = Reward::where('company_id', $companyId)->count();
-        $pendingRedemptions = RewardRedemption::query()
-            ->where('status', 'pending')
-            ->whereHas('reward', fn ($q) => $q->where('company_id', $companyId))
-            ->count();
 
         $repIds = MedicalRep::where('company_id', $companyId)->pluck('id');
 
@@ -157,7 +150,7 @@ class DashboardController extends BaseCompanyController
             ->orderByDesc('drug_samples_count')
             ->limit(5)
             ->get()
-            ->map(fn (Drug $d) => [
+            ->map(fn(Drug $d) => [
                 'drug_id' => $d->id,
                 'market_name' => $d->market_name,
                 'sample_requests' => $d->drug_samples_count,
@@ -186,10 +179,6 @@ class DashboardController extends BaseCompanyController
                 'delivered' => $samplesDelivered,
                 'by_status' => $sampleStats,
                 'top_requested_drugs' => $topRequestedDrugs,
-            ],
-            'rewards' => [
-                'total' => $rewardsTotal,
-                'pending_redemptions' => $pendingRedemptions,
             ],
             'rep_performance' => $repPerformance,
             'top_drugs' => $topDrugs,

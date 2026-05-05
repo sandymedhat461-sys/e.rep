@@ -186,32 +186,6 @@
         </tbody>
     </table>
 
-    <h2>Redemptions</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Reward</th>
-                <th>Doctor</th>
-                <th>Status</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($redemptions as $redemption)
-            <tr>
-                <td>{{ $redemption->reward?->title ?? '—' }}</td>
-                <td>{{ $redemption->doctor?->full_name ?? '—' }}</td>
-                <td>{{ $redemption->status }}</td>
-                <td>{{ $redemption->redeemed_at ? $redemption->redeemed_at->format('Y-m-d') : '—' }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="4" class="muted">No redemptions.</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
     <p class="footer">E-Rep confidential report — for authorized use only.</p>
 </body>
 

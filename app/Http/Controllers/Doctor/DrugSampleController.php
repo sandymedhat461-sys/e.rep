@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
+use App\Models\DoctorPoint;
 use App\Models\RepDrugAssignment;
 use App\Models\DrugSample;
 use Illuminate\Http\JsonResponse;
@@ -52,6 +53,14 @@ class DrugSampleController extends Controller
             'quantity' => $validated['quantity'],
             'status' => 'pending',
             'requested_at' => now(),
+        ]);
+
+        DoctorPoint::create([
+            'doctor_id' => $doctor->id,
+            'source' => 'sample',
+            'source_id' => $sample->id,
+            'value' => 20,
+            'description' => 'Points earned from sample request',
         ]);
 
         return $this->success(['sample' => $sample], null, 201);

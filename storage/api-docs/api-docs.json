@@ -633,6 +633,78 @@
                 ]
             }
         },
+        "/api/admin/users/doctors": {
+            "post": {
+                "tags": [
+                    "Admin - User Management"
+                ],
+                "summary": "Create a doctor account",
+                "operationId": "createDoctor",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "full_name",
+                                    "email",
+                                    "password",
+                                    "phone",
+                                    "national_id",
+                                    "specialization",
+                                    "hospital_name",
+                                    "syndicate_id"
+                                ],
+                                "properties": {
+                                    "full_name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "national_id": {
+                                        "type": "string"
+                                    },
+                                    "specialization": {
+                                        "type": "string"
+                                    },
+                                    "hospital_name": {
+                                        "type": "string"
+                                    },
+                                    "syndicate_id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/admin/users/{type}/{id}/approve": {
             "post": {
                 "tags": [
@@ -2934,44 +3006,6 @@
             }
         },
         "/api/company/posts/{id}/like": {
-            "post": {
-                "tags": [
-                    "Company - Posts"
-                ],
-                "summary": "Like post",
-                "operationId": "100a48137bdf67496fd3a9c20919ffb3",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created"
-                    },
-                    "422": {
-                        "description": "Already liked"
-                    },
-                    "404": {
-                        "description": "Post not found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/company/posts/{id}/like": {
             "delete": {
                 "tags": [
                     "Company - Posts"
@@ -3094,428 +3128,42 @@
                 ]
             }
         },
-        "/api/company/rewards": {
-            "get": {
-                "tags": [
-                    "Company - Rewards"
-                ],
-                "summary": "List rewards",
-                "operationId": "f61d0fa6de64d49943e29d3cef51db17",
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Company - Rewards"
-                ],
-                "summary": "Create reward",
-                "operationId": "0cd0ac3b35930057abd31e5447ef7f0e",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "description": {
-                                        "type": "string"
-                                    },
-                                    "points_required": {
-                                        "type": "integer"
-                                    },
-                                    "quantity_available": {
-                                        "type": "integer"
-                                    },
-                                    "status": {
-                                        "type": "string",
-                                        "enum": [
-                                            "active",
-                                            "inactive"
-                                        ]
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Created"
-                    },
-                    "422": {
-                        "description": "Validation error"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/company/rewards/{id}": {
-            "get": {
-                "tags": [
-                    "Company - Rewards"
-                ],
-                "summary": "Get reward",
-                "operationId": "2d917e70b1f73c642010d1cfa10998b9",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Not found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "put": {
-                "tags": [
-                    "Company - Rewards"
-                ],
-                "summary": "Update reward",
-                "operationId": "86d1ad00ac8a203a4aeb63f893c6934f",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "description": {
-                                        "type": "string"
-                                    },
-                                    "points_required": {
-                                        "type": "integer"
-                                    },
-                                    "quantity_available": {
-                                        "type": "integer"
-                                    },
-                                    "status": {
-                                        "type": "string",
-                                        "enum": [
-                                            "active",
-                                            "inactive"
-                                        ]
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Not found"
-                    },
-                    "422": {
-                        "description": "Validation error"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Company - Rewards"
-                ],
-                "summary": "Delete reward",
-                "operationId": "8dd2ed397e91f7cf2ef5c269996fe807",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Not found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/company/redemptions": {
-            "get": {
-                "tags": [
-                    "Company - Rewards"
-                ],
-                "summary": "List reward redemptions",
-                "operationId": "2fff40addb1f84f24257483fd4e1db08",
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/company/redemptions/{id}/fulfill": {
-            "post": {
-                "tags": [
-                    "Company - Rewards"
-                ],
-                "summary": "Fulfill redemption",
-                "operationId": "8e871524578872a6939ba27ea5417458",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Not found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/company/redemptions/{id}/cancel": {
-            "post": {
-                "tags": [
-                    "Company - Rewards"
-                ],
-                "summary": "Cancel redemption",
-                "operationId": "c8885d87db41c59756171107dccab0e6",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Not found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/company/redemptions/{id}/approve": {
-            "post": {
-                "tags": [
-                    "Company - Rewards"
-                ],
-                "summary": "Approve redemption",
-                "operationId": "approveCompanyRedemption",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Not found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/company/redemptions/{id}/reject": {
-            "post": {
-                "tags": [
-                    "Company - Rewards"
-                ],
-                "summary": "Reject redemption",
-                "operationId": "rejectCompanyRedemption",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Not found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/company/redemptions/{id}/deliver": {
-            "post": {
-                "tags": [
-                    "Company - Rewards"
-                ],
-                "summary": "Deliver redemption",
-                "operationId": "deliverCompanyRedemption",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Not found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/api/company/password": {
             "put": {
-                "tags": ["Company Profile"],
+                "tags": [
+                    "Company Profile"
+                ],
                 "summary": "Change company password",
                 "operationId": "changeCompanyPassword",
-                "security": [{"bearerAuth": []}],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": ["current_password", "new_password", "new_password_confirmation"],
+                                "required": [
+                                    "current_password",
+                                    "new_password",
+                                    "new_password_confirmation"
+                                ],
                                 "properties": {
-                                    "current_password": {"type": "string", "format": "password"},
-                                    "new_password": {"type": "string", "format": "password", "minLength": 8},
-                                    "new_password_confirmation": {"type": "string", "format": "password"}
+                                    "current_password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 8
+                                    },
+                                    "new_password_confirmation": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
                                 },
                                 "type": "object"
                             }
@@ -3523,9 +3171,15 @@
                     }
                 },
                 "responses": {
-                    "200": {"description": "Password changed successfully"},
-                    "401": {"description": "Unauthenticated"},
-                    "422": {"description": "Validation error"}
+                    "200": {
+                        "description": "Password changed successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
                 }
             }
         },
@@ -4416,11 +4070,19 @@
                                     },
                                     "type": {
                                         "type": "string",
-                                        "enum": ["Online", "Offline"],
+                                        "enum": [
+                                            "Online",
+                                            "Offline"
+                                        ],
                                         "example": "Online"
                                     }
                                 },
-                                "required": ["rep_id", "date", "time", "type"]
+                                "required": [
+                                    "rep_id",
+                                    "date",
+                                    "time",
+                                    "type"
+                                ]
                             }
                         }
                     }
@@ -5112,88 +4774,6 @@
                                 }
                             }
                         }
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/doctor/rewards": {
-            "get": {
-                "tags": [
-                    "Doctor - Points"
-                ],
-                "summary": "List rewards with can_redeem flag",
-                "operationId": "82d59ec7a7c48678495135e444c08b9f",
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/doctor/redemptions": {
-            "get": {
-                "tags": [
-                    "Doctor - Points"
-                ],
-                "summary": "List my redemptions",
-                "operationId": "81a24c7150c6862ef215c8b415678e16",
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/doctor/rewards/{rewardId}/redeem": {
-            "post": {
-                "tags": [
-                    "Doctor - Points"
-                ],
-                "summary": "Redeem reward",
-                "operationId": "dada293538506174ecc813772dbaf674",
-                "parameters": [
-                    {
-                        "name": "rewardId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created"
-                    },
-                    "422": {
-                        "description": "Insufficient points"
-                    },
-                    "404": {
-                        "description": "Reward not found"
                     },
                     "401": {
                         "description": "Unauthenticated"
@@ -6491,44 +6071,6 @@
                     },
                     "404": {
                         "description": "Not found"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/rep/posts/{id}/like": {
-            "post": {
-                "tags": [
-                    "Rep - Posts"
-                ],
-                "summary": "Like post",
-                "operationId": "419d1cd5a1502db0d8aed1d98323ab68",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created"
-                    },
-                    "422": {
-                        "description": "Already liked"
-                    },
-                    "404": {
-                        "description": "Post not found"
                     },
                     "401": {
                         "description": "Unauthenticated"

@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Drug;
 use App\Models\Event;
 use App\Models\MedicalRep;
-use App\Models\RewardRedemption;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReportController extends Controller
@@ -29,11 +29,6 @@ class ReportController extends Controller
                 ->withCount('eventRequests')
                 ->get(),
             'reps' => MedicalRep::where('company_id', $company->id)->get(),
-            'redemptions' => RewardRedemption::whereHas('reward', function ($q) use ($company) {
-                $q->where('company_id', $company->id);
-            })
-                ->with(['reward:id,title', 'doctor:id,full_name'])
-                ->get(),
         ];
 
         $pdf = Pdf::loadView('pdf.company_report', $data);
