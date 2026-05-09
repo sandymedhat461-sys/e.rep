@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class MessageController extends BaseMedicalRepController
 {
-    
+
     public function index(): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -28,7 +28,7 @@ class MessageController extends BaseMedicalRepController
         return $this->success(['messages' => $messages]);
     }
 
-    
+
     public function store(Request $request): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -68,7 +68,7 @@ class MessageController extends BaseMedicalRepController
         return $this->success(['message' => $message], null, 201);
     }
 
-    
+
     public function markAsRead(int $id): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -88,5 +88,81 @@ class MessageController extends BaseMedicalRepController
         $message->update(['is_read' => true]);
 
         return $this->success([], 'Marked as read');
+    }
+
+    public function conversations(): JsonResponse
+    {
+        $rep = $this->repOrForbidden();
+        if ($rep instanceof JsonResponse) return $rep;
+
+        $repTypes = ['medical_rep', 'MedicalRep', 'rep', 'App\\Models\\MedicalRep'];
+
+        // Get all messages involving this rep
+        $messages = Message::query()
+            ->where(function ($q) use ($rep, $repTypes) {
+                $q->where(function ($inner) use ($rep, $repTypes) {
+                    $inner->where('sender_id', $rep->id)->whereIn('sender_type', $repTypes);
+                })->orWhere(function ($inner) use ($rep, $repTypes) {
+                    $inner->where('receiver_id', $rep->id)->whereIn('receiver_type', $repTypes);
+                });
+            })
+            ->with('sender')
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Group by partner (the other person's id, always a doctor here)
+        $conversations = $messages->groupBy(function ($msg) use ($rep, $repTypes) {
+            $isSender = in_array($msg->sender_type, $repTypes) && $msg->sender_id == $rep->id;
+            return $isSender ? 'doctor_' . $msg->receiver_id : 'doctor_' . $msg->sender_id;
+        })->map(function ($group, $key) use ($rep, $repTypes) {
+            $latest = $group->first();
+            $isSender = in_array($latest->sender_type, $repTypes) && $latest->sender_id == $rep->id;
+            $partnerId = $isSender ? $latest->receiver_id : $latest->sender_id;
+            $partner = \App\Models\Doctor::find($partnerId, ['id', 'full_name']);
+            return [
+                'partner_id' => $partnerId,
+                'partner_type' => 'doctor',
+                'partner_name' => $partner?->full_name ?? 'Unknown',
+                'latest_message' => $latest->body,
+                'latest_time' => $latest->created_at,
+                'unread_count' => $group->where('receiver_id', $rep->id)->where('is_read', false)->count(),
+            ];
+        })->values();
+
+        return $this->success(['conversations' => $conversations]);
+    }
+
+    public function conversation(int $partnerId): JsonResponse
+    {
+        $rep = $this->repOrForbidden();
+        if ($rep instanceof JsonResponse) return $rep;
+
+        $repTypes = ['medical_rep', 'MedicalRep', 'rep', 'App\\Models\\MedicalRep'];
+
+        $messages = Message::query()
+            ->where(function ($q) use ($rep, $repTypes, $partnerId) {
+                // rep → doctor
+                $q->where(function ($inner) use ($rep, $repTypes, $partnerId) {
+                    $inner->where('sender_id', $rep->id)
+                        ->whereIn('sender_type', $repTypes)
+                        ->where('receiver_id', $partnerId)
+                        ->where('receiver_type', 'doctor');
+                    // doctor → rep
+                })->orWhere(function ($inner) use ($rep, $repTypes, $partnerId) {
+                    $inner->where('sender_id', $partnerId)
+                        ->where('sender_type', 'doctor')
+                        ->where('receiver_id', $rep->id)
+                        ->whereIn('receiver_type', $repTypes);
+                });
+            })
+            ->orderBy('created_at')
+            ->get();
+
+        $partner = \App\Models\Doctor::find($partnerId, ['id', 'full_name']);
+
+        return $this->success([
+            'messages' => $messages,
+            'partner' => $partner,
+        ]);
     }
 }

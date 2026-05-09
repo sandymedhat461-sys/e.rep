@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class MeetingController extends BaseMedicalRepController
 {
-    
+
     public function index(Request $request): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -28,7 +28,7 @@ class MeetingController extends BaseMedicalRepController
         return $this->success(['meetings' => $query->latest()->get()]);
     }
 
-    
+
     public function store(Request $request): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -40,6 +40,7 @@ class MeetingController extends BaseMedicalRepController
             'doctor_id' => ['required', 'exists:doctors,id'],
             'scheduled_at' => ['required', 'date'],
             'notes' => ['nullable', 'string', 'max:5000'],
+            'type' => ['nullable', 'string', 'max:50'],
         ]);
         if ($validated instanceof JsonResponse) {
             return $validated;
@@ -55,13 +56,14 @@ class MeetingController extends BaseMedicalRepController
             'doctor_id' => $validated['doctor_id'],
             'scheduled_at' => $validated['scheduled_at'],
             'notes' => $validated['notes'] ?? null,
-            'status' => 'scheduled',
+            'type' => $validated['type'] ?? 'Online',
+            'status' => 'pending',
         ]);
 
         return $this->success(['meeting' => $meeting], null, 201);
     }
 
-    
+
     public function show(int $id): JsonResponse
     {
         $meeting = $this->ownedMeeting($id);
@@ -72,7 +74,7 @@ class MeetingController extends BaseMedicalRepController
         return $this->success(['meeting' => $meeting->load('doctor:id,full_name,email')]);
     }
 
-    
+
     public function complete(int $id): JsonResponse
     {
         $meeting = $this->ownedMeeting($id);
@@ -97,7 +99,7 @@ class MeetingController extends BaseMedicalRepController
         return $this->success(['meeting' => $meeting->fresh()], 'Meeting completed');
     }
 
-    
+
     public function cancel(int $id): JsonResponse
     {
         $meeting = $this->ownedMeeting($id);
@@ -112,7 +114,34 @@ class MeetingController extends BaseMedicalRepController
         return $this->success(['meeting' => $meeting->fresh()], 'Meeting cancelled');
     }
 
-    
+
+    public function approve(int $id): JsonResponse
+    {
+        $meeting = $this->ownedMeeting($id);
+        if ($meeting instanceof JsonResponse) return $meeting;
+
+        if ($meeting->status !== 'pending') {
+            return $this->error('Only pending meetings can be approved', 422);
+        }
+
+        $meeting->update(['status' => 'scheduled']);
+        return $this->success(['meeting' => $meeting->fresh()], 'Meeting approved');
+    }
+
+    public function reject(int $id): JsonResponse
+    {
+        $meeting = $this->ownedMeeting($id);
+        if ($meeting instanceof JsonResponse) return $meeting;
+
+        if ($meeting->status !== 'pending') {
+            return $this->error('Only pending meetings can be rejected', 422);
+        }
+
+        $meeting->update(['status' => 'rejected']);
+        return $this->success(['meeting' => $meeting->fresh()], 'Meeting rejected');
+    }
+
+
     public function getVideoRoom(int $id): JsonResponse
     {
         $rep = $this->repOrForbidden();
@@ -130,12 +159,12 @@ class MeetingController extends BaseMedicalRepController
         }
 
         if (!$meeting->room_name) {
-            $roomName = 'erep-'.$meeting->id.'-'.Str::random(10);
+            $roomName = 'erep-' . $meeting->id . '-' . Str::random(10);
             $meeting->update(['room_name' => $roomName]);
         }
 
         return $this->success([
-            'room_url' => 'https://meet.jit.si/'.$meeting->room_name,
+            'room_url' => 'https://meet.jit.si/' . $meeting->room_name,
             'room_name' => $meeting->room_name,
         ]);
     }

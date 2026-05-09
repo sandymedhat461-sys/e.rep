@@ -71,7 +71,7 @@ class MessageController extends BaseCompanyController
         return $this->success(['message' => $message], null, 201);
     }
 
-   
+
     public function markAsRead(int $id): JsonResponse
     {
         $company = $this->companyOrForbidden();
@@ -92,5 +92,87 @@ class MessageController extends BaseCompanyController
         $message->update(['is_read' => true]);
 
         return $this->success([], 'Marked as read');
+    }
+
+    public function conversations(): JsonResponse
+    {
+        $company = $this->companyOrForbidden();
+        if ($company instanceof JsonResponse) return $company;
+
+        $companyTypes = ['company', 'Company', 'App\\Models\\Company'];
+
+        $messages = Message::query()
+            ->where(function ($q) use ($company, $companyTypes) {
+                $q->where(function ($inner) use ($company, $companyTypes) {
+                    $inner->where('sender_id', $company->id)->whereIn('sender_type', $companyTypes);
+                })->orWhere(function ($inner) use ($company, $companyTypes) {
+                    $inner->where('receiver_id', $company->id)->whereIn('receiver_type', $companyTypes);
+                });
+            })
+            ->orderByDesc('created_at')
+            ->get();
+
+        $conversations = $messages->groupBy(function ($msg) use ($company, $companyTypes) {
+            $isSender = in_array($msg->sender_type, $companyTypes) && $msg->sender_id == $company->id;
+            $partnerType = $isSender ? $msg->receiver_type : $msg->sender_type;
+            $partnerId = $isSender ? $msg->receiver_id : $msg->sender_id;
+            return $partnerType . '_' . $partnerId;
+        })->map(function ($group) use ($company, $companyTypes) {
+            $latest = $group->first();
+            $isSender = in_array($latest->sender_type, $companyTypes) && $latest->sender_id == $company->id;
+            $partnerType = $isSender ? $latest->receiver_type : $latest->sender_type;
+            $partnerId = $isSender ? $latest->receiver_id : $latest->sender_id;
+
+            if ($partnerType === 'doctor') {
+                $partner = \App\Models\Doctor::find($partnerId, ['id', 'full_name']);
+            } else {
+                $partner = \App\Models\MedicalRep::find($partnerId, ['id', 'full_name']);
+            }
+
+            return [
+                'partner_id' => $partnerId,
+                'partner_type' => $partnerType,
+                'partner_name' => $partner?->full_name ?? 'Unknown',
+                'latest_message' => $latest->body,
+                'latest_time' => $latest->created_at,
+                'unread_count' => $group->where('receiver_id', $company->id)->where('is_read', false)->count(),
+            ];
+        })->values();
+
+        return $this->success(['conversations' => $conversations]);
+    }
+
+    public function conversation(string $partnerType, int $partnerId): JsonResponse
+    {
+        $company = $this->companyOrForbidden();
+        if ($company instanceof JsonResponse) return $company;
+
+        $companyTypes = ['company', 'Company', 'App\\Models\\Company'];
+
+        $messages = Message::query()
+            ->where(function ($q) use ($company, $companyTypes, $partnerType, $partnerId) {
+                $q->where(function ($inner) use ($company, $companyTypes, $partnerType, $partnerId) {
+                    $inner->where('sender_id', $company->id)
+                        ->whereIn('sender_type', $companyTypes)
+                        ->where('receiver_id', $partnerId)
+                        ->where('receiver_type', $partnerType);
+                })->orWhere(function ($inner) use ($company, $companyTypes, $partnerType, $partnerId) {
+                    $inner->where('sender_id', $partnerId)
+                        ->where('sender_type', $partnerType)
+                        ->where('receiver_id', $company->id)
+                        ->whereIn('receiver_type', $companyTypes);
+                });
+            })
+            ->orderBy('created_at')
+            ->get();
+
+        $partner = $partnerType === 'doctor'
+            ? \App\Models\Doctor::find($partnerId, ['id', 'full_name'])
+            : \App\Models\MedicalRep::find($partnerId, ['id', 'full_name']);
+
+        return $this->success([
+            'messages' => $messages,
+            'partner' => $partner,
+        ]);
     }
 }

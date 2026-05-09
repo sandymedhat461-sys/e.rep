@@ -161,6 +161,8 @@ Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
 
     Route::get('/messages', [MessageController::class, 'index']);
     Route::post('/messages', [MessageController::class, 'store']);
+    Route::get('/messages/conversations', [MessageController::class, 'conversations']);
+    Route::get('/messages/conversation/{partnerId}', [MessageController::class, 'conversation']);
     Route::post('/messages/{id}/read', [MessageController::class, 'markAsRead']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
@@ -177,6 +179,8 @@ Route::prefix('company')->middleware('auth:company-api')->group(function () {
 
     Route::get('/messages', [CompanyMessageController::class, 'index']);
     Route::post('/messages', [CompanyMessageController::class, 'store']);
+    Route::get('/messages/conversations', [CompanyMessageController::class, 'conversations']);
+    Route::get('/messages/conversation/{partnerType}/{partnerId}', [CompanyMessageController::class, 'conversation']);
     Route::post('/messages/{id}/read', [CompanyMessageController::class, 'markAsRead']);
 
     Route::get('/ingredients', [CompanyActiveIngredientController::class, 'index']);
@@ -243,6 +247,8 @@ Route::prefix('rep')->middleware('auth:rep-api')->group(function () {
     Route::get('/meetings/{id}', [MedicalRepMeetingController::class, 'show']);
     Route::post('/meetings/{id}/complete', [MedicalRepMeetingController::class, 'complete']);
     Route::post('/meetings/{id}/cancel', [MedicalRepMeetingController::class, 'cancel']);
+    Route::post('/meetings/{id}/approve', [MedicalRepMeetingController::class, 'approve']);
+    Route::post('/meetings/{id}/reject', [MedicalRepMeetingController::class, 'reject']);
     Route::get('/meetings/{id}/video-room', [MedicalRepMeetingController::class, 'getVideoRoom']);
 
     Route::get('/samples', [MedicalRepDrugSampleController::class, 'index']);
@@ -274,6 +280,8 @@ Route::prefix('rep')->middleware('auth:rep-api')->group(function () {
 
     Route::get('/messages', [MedicalRepMessageController::class, 'index']);
     Route::post('/messages', [MedicalRepMessageController::class, 'store']);
+    Route::get('/messages/conversations', [MedicalRepMessageController::class, 'conversations']);
+    Route::get('/messages/conversation/{partnerId}', [MedicalRepMessageController::class, 'conversation']);
     Route::post('/messages/{id}/read', [MedicalRepMessageController::class, 'markAsRead']);
 
     Route::get('/notifications', [MedicalRepNotificationController::class, 'index']);
