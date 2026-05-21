@@ -9,18 +9,17 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use OpenApi\Attributes as OA;
 use Throwable;
 
 class AdminAuthController extends Controller
 {
 
-    /**
-     * @OA\Post(
-     *     path="/api/auth/admin/register",
-     *     summary="Register a new admin",
-     *     @OA\Response(response=201, description="Success")
-     * )
-     */
+    #[OA\Post(
+        path: '/api/auth/admin/register',
+        summary: 'Register a new admin',
+        responses: [new OA\Response(response: 201, description: 'Success')]
+    )]
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
