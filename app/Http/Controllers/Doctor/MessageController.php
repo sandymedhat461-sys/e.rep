@@ -76,6 +76,7 @@ class MessageController extends Controller
     {
         $doctorId = (int) $request->user()->id;
         $doctorTypes = ['doctor', 'Doctor', 'App\\Models\\Doctor'];
+        dd(\App\Models\MedicalRep::all());
 
         $messages = Message::query()
             ->where(function ($q) use ($doctorId, $doctorTypes) {
@@ -91,18 +92,17 @@ class MessageController extends Controller
         $conversations = $messages->groupBy(function ($msg) use ($doctorId, $doctorTypes) {
             $isSender = in_array($msg->sender_type, $doctorTypes) && $msg->sender_id == $doctorId;
             return 'rep_' . ($isSender ? $msg->receiver_id : $msg->sender_id);
-        })->map(function ($group, $key) use ($doctorId, $doctorTypes) {
+        })->map(function ($group, $key) use ($doctorId) {
             $latest = $group->first();
-            $isSender = in_array($latest->sender_type, $doctorTypes) && $latest->sender_id == $doctorId;
-            $partnerId = $isSender ? $latest->receiver_id : $latest->sender_id;
-            $partner = \App\Models\MedicalRep::find($partnerId, ['id', 'full_name']);
+            $partnerId = (int) str_replace('rep_', '', $key);
+            $partner = \App\Models\MedicalRep::select(['id', 'full_name'])->find($partnerId);
             return [
-                'partner_id' => $partnerId,
-                'partner_type' => 'medical_rep',
-                'partner_name' => $partner?->full_name ?? 'Unknown',
+                'partner_id'     => $partnerId,
+                'partner_type'   => 'medical_rep',
+                'partner_name'   => $partner?->full_name ?? 'Unknown',
                 'latest_message' => $latest->body,
-                'latest_time' => $latest->created_at,
-                'unread_count' => $group->where('receiver_id', $doctorId)->where('is_read', false)->count(),
+                'latest_time'    => $latest->created_at,
+                'unread_count'   => $group->where('receiver_id', $doctorId)->where('is_read', false)->count(),
             ];
         })->values();
 

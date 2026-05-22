@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('doctor_points', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('doctor_id');
-            $table->enum('source', ['meeting', 'review', 'feedback', 'sample', 'manual']);
-            $table->unsignedInteger('value');
+            $table->enum('source', ['meeting', 'review', 'feedback', 'sample', 'manual', 'event']);
+            $table->integer('value');
+            $table->unsignedBigInteger('source_id')->nullable();
             $table->timestamps();
 
             $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');

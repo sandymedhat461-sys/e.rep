@@ -113,19 +113,18 @@ class MessageController extends BaseMedicalRepController
         // Group by partner (the other person's id, always a doctor here)
         $conversations = $messages->groupBy(function ($msg) use ($rep, $repTypes) {
             $isSender = in_array($msg->sender_type, $repTypes) && $msg->sender_id == $rep->id;
-            return $isSender ? 'doctor_' . $msg->receiver_id : 'doctor_' . $msg->sender_id;
-        })->map(function ($group, $key) use ($rep, $repTypes) {
+            return 'doctor_' . ($isSender ? $msg->receiver_id : $msg->sender_id);
+        })->map(function ($group, $key) use ($rep) {
             $latest = $group->first();
-            $isSender = in_array($latest->sender_type, $repTypes) && $latest->sender_id == $rep->id;
-            $partnerId = $isSender ? $latest->receiver_id : $latest->sender_id;
-            $partner = \App\Models\Doctor::find($partnerId, ['id', 'full_name']);
+            $partnerId = (int) str_replace('doctor_', '', $key);
+            $partner = \App\Models\Doctor::select(['id', 'full_name'])->find($partnerId);
             return [
-                'partner_id' => $partnerId,
-                'partner_type' => 'doctor',
-                'partner_name' => $partner?->full_name ?? 'Unknown',
+                'partner_id'     => $partnerId,
+                'partner_type'   => 'doctor',
+                'partner_name'   => $partner?->full_name ?? 'Unknown',
                 'latest_message' => $latest->body,
-                'latest_time' => $latest->created_at,
-                'unread_count' => $group->where('receiver_id', $rep->id)->where('is_read', false)->count(),
+                'latest_time'    => $latest->created_at,
+                'unread_count'   => $group->where('receiver_id', $rep->id)->where('is_read', false)->count(),
             ];
         })->values();
 
