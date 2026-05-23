@@ -126,7 +126,6 @@ Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
 
     Route::get('/meetings', [MeetingController::class, 'index']);
     Route::get('/meetings/{id}', [MeetingController::class, 'show']);
-    Route::get('/meetings/{id}/video-room', [MeetingController::class, 'getVideoRoom']);
     Route::post('/meetings', [MeetingController::class, 'store']);
 
     Route::get('/report/generate', [ReportController::class, 'generate']);
@@ -249,7 +248,6 @@ Route::prefix('rep')->middleware('auth:rep-api')->group(function () {
     Route::post('/meetings/{id}/cancel', [MedicalRepMeetingController::class, 'cancel']);
     Route::post('/meetings/{id}/approve', [MedicalRepMeetingController::class, 'approve']);
     Route::post('/meetings/{id}/reject', [MedicalRepMeetingController::class, 'reject']);
-    Route::get('/meetings/{id}/video-room', [MedicalRepMeetingController::class, 'getVideoRoom']);
 
     Route::get('/samples', [MedicalRepDrugSampleController::class, 'index']);
     Route::get('/samples/{id}', [MedicalRepDrugSampleController::class, 'show']);

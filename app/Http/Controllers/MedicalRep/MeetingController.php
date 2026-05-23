@@ -141,34 +141,6 @@ class MeetingController extends BaseMedicalRepController
         return $this->success(['meeting' => $meeting->fresh()], 'Meeting rejected');
     }
 
-
-    public function getVideoRoom(int $id): JsonResponse
-    {
-        $rep = $this->repOrForbidden();
-        if ($rep instanceof JsonResponse) {
-            return $rep;
-        }
-
-        $meeting = Meeting::where('id', $id)->where('rep_id', $rep->id)->first();
-        if (!$meeting) {
-            return $this->error('Meeting not found', 404);
-        }
-
-        if ($meeting->status !== 'scheduled') {
-            return $this->error('Meeting is not active', 403);
-        }
-
-        if (!$meeting->room_name) {
-            $roomName = 'erep-' . $meeting->id . '-' . Str::random(10);
-            $meeting->update(['room_name' => $roomName]);
-        }
-
-        return $this->success([
-            'room_url' => 'https://meet.jit.si/' . $meeting->room_name,
-            'room_name' => $meeting->room_name,
-        ]);
-    }
-
     private function ownedMeeting(int $id): Meeting|JsonResponse
     {
         $rep = $this->repOrForbidden();

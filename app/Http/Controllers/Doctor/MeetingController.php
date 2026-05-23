@@ -41,33 +41,6 @@ class MeetingController extends Controller
     }
 
 
-    public function getVideoRoom(int $id): JsonResponse
-    {
-        $doctor = auth('doctor-api')->user();
-        if (!$doctor) {
-            return $this->error('Unauthenticated', 401);
-        }
-
-        $meeting = Meeting::where('id', $id)->where('doctor_id', $doctor->id)->first();
-        if (!$meeting) {
-            return $this->error('Meeting not found', 404);
-        }
-
-        if ($meeting->status !== 'scheduled') {
-            return $this->error('Meeting is not active', 403);
-        }
-
-        if (!$meeting->room_name) {
-            $roomName = 'erep-' . $meeting->id . '-' . Str::random(10);
-            $meeting->update(['room_name' => $roomName]);
-        }
-
-        return $this->success([
-            'room_url' => 'https://meet.jit.si/' . $meeting->room_name,
-            'room_name' => $meeting->room_name,
-        ]);
-    }
-
     public function store(Request $request): JsonResponse
     {
         $validated = $this->validateRequest($request, [

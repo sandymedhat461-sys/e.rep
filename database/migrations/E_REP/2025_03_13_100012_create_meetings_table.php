@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('doctor_id');
             $table->unsignedBigInteger('rep_id');
-            $table->string('meeting_link', 255)->nullable();
             $table->dateTime('scheduled_at')->index();
             $table->unsignedInteger('points_awarded')->nullable();
             $table->timestamps();

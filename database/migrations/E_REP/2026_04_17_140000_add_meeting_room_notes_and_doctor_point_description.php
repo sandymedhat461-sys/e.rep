@@ -9,11 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('meetings', function (Blueprint $table) {
-            if (!Schema::hasColumn('meetings', 'room_name')) {
-                $table->string('room_name', 255)->nullable()->after('status');
-            }
             if (!Schema::hasColumn('meetings', 'notes')) {
-                $table->text('notes')->nullable()->after('meeting_link');
+                $table->text('notes')->nullable()->after('scheduled_at');
             }
         });
 
@@ -35,9 +32,6 @@ return new class extends Migration
         Schema::table('meetings', function (Blueprint $table) {
             if (Schema::hasColumn('meetings', 'notes')) {
                 $table->dropColumn('notes');
-            }
-            if (Schema::hasColumn('meetings', 'room_name')) {
-                $table->dropColumn('room_name');
             }
         });
     }
