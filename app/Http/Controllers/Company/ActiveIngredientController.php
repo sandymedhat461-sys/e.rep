@@ -16,7 +16,7 @@ class ActiveIngredientController extends BaseCompanyController
             return $company;
         }
 
-        $ingredients = ActiveIngredient::where('created_by_company_id', $company->id)->get();
+        $ingredients = ActiveIngredient::orderBy('name')->get();
         return $this->success(['ingredients' => $ingredients]);
     }
 
@@ -37,7 +37,6 @@ class ActiveIngredientController extends BaseCompanyController
             return $validated;
         }
 
-        $validated['created_by_company_id'] = $company->id;
         $ingredient = ActiveIngredient::create($validated);
 
         return $this->success(['ingredient' => $ingredient], null, 201);
@@ -51,9 +50,7 @@ class ActiveIngredientController extends BaseCompanyController
             return $company;
         }
 
-        $ingredient = ActiveIngredient::where('id', $id)
-            ->where('created_by_company_id', $company->id)
-            ->first();
+        $ingredient = ActiveIngredient::find($id);
         if (!$ingredient) {
             return $this->error('Ingredient not found', 404);
         }
@@ -79,9 +76,7 @@ class ActiveIngredientController extends BaseCompanyController
             return $company;
         }
 
-        $ingredient = ActiveIngredient::where('id', $id)
-            ->where('created_by_company_id', $company->id)
-            ->first();
+        $ingredient = ActiveIngredient::find($id);
         if (!$ingredient) {
             return $this->error('Ingredient not found', 404);
         }

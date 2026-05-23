@@ -14,7 +14,6 @@ class ActiveIngredient extends Model
         'name',
         'description',
         'side_effect',
-        'created_by_company_id',
     ];
 
     public function company(): BelongsTo

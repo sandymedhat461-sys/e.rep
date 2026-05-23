@@ -68,8 +68,7 @@ class DrugController extends BaseCompanyController
         $drug = Drug::create($payload);
 
         $ingredientIds = $validated['ingredient_ids'] ?? [];
-        $ownedIngredientIds = ActiveIngredient::where('created_by_company_id', $company->id)
-            ->whereIn('id', $ingredientIds)
+        $ownedIngredientIds = ActiveIngredient::whereIn('id', $ingredientIds)
             ->pluck('id')
             ->all();
         $drug->ingredients()->sync($ownedIngredientIds);
@@ -141,8 +140,7 @@ class DrugController extends BaseCompanyController
         $drug->update($data);
 
         if (array_key_exists('ingredient_ids', $validated)) {
-            $ownedIngredientIds = ActiveIngredient::where('created_by_company_id', $company->id)
-                ->whereIn('id', $validated['ingredient_ids'] ?? [])
+            $ownedIngredientIds = ActiveIngredient::whereIn('id', $validated['ingredient_ids'] ?? [])
                 ->pluck('id')
                 ->all();
             $drug->ingredients()->sync($ownedIngredientIds);
