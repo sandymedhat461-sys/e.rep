@@ -37,11 +37,7 @@ class UserManagementController extends Controller
                 ], 404);
             }
 
-            if ($user instanceof Company) {
-                $user->status = 'approved';
-            } else {
-                $user->status = 'active';
-            }
+            $user->status = 'active';
             $user->save();
 
             return response()->json([
@@ -151,7 +147,7 @@ class UserManagementController extends Controller
             'password' => bcrypt($validated['password']),
             'hotline' => $validated['hotline'],
             'commercial_register' => $validated['commercial_register'],
-            'status' => 'approved',
+            'status' => 'active',
         ]);
 
         return $this->success([

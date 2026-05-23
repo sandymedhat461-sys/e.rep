@@ -191,6 +191,7 @@ class PostController extends Controller
             'sharer_id' => $request->user()->id,
             'sharer_type' => 'doctor',
         ]);
+        Post::whereKey($id)->increment('shares_count');
 
         return $this->success([], 'Post shared', 201);
     }

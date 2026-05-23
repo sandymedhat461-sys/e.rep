@@ -105,7 +105,7 @@ class CompanyAuthController extends Controller
                 ], 403);
             }
 
-            if ($company->status !== 'approved') {
+            if ($company->status !== 'active') {
                 return response()->json([
                     'success' => false,
                     'message' => 'Company account is not approved',

@@ -48,7 +48,6 @@ use App\Http\Controllers\MedicalRep\MessageController as MedicalRepMessageContro
 use App\Http\Controllers\MedicalRep\NotificationController as MedicalRepNotificationController;
 use App\Http\Controllers\MedicalRep\PostController as MedicalRepPostController;
 use App\Http\Controllers\MedicalRep\ProfileController as MedicalRepProfileController;
-use App\Http\Controllers\MedicalRep\PointController as MedicalRepPointController;
 use App\Http\Controllers\MedicalRep\TargetController as MedicalRepTargetController;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
@@ -234,9 +233,6 @@ Route::prefix('rep')->middleware('auth:rep-api')->group(function () {
     Route::put('/profile', [MedicalRepProfileController::class, 'update']);
     Route::put('/password', [MedicalRepProfileController::class, 'changePassword']);
     Route::get('/report/generate', [MedicalRepReportController::class, 'generate']);
-
-    Route::get('/points/total', [MedicalRepPointController::class, 'total']);
-    Route::get('/points', [MedicalRepPointController::class, 'index']);
 
     Route::get('/doctors', [AssignedDoctorController::class, 'index']);
     Route::get('/doctors/{id}', [AssignedDoctorController::class, 'show']);

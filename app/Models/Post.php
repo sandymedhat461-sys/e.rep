@@ -18,6 +18,9 @@ class Post extends Model
         'content',
         'image',
         'status',
+        'likes_count',
+        'comments_count',
+        'shares_count',
     ];
 
     protected function casts(): array

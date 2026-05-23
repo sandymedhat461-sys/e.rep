@@ -107,6 +107,13 @@ class DoctorAuthController extends Controller
                     'message' => 'Account has been blocked',
                 ], 403);
             }
+            if ($doctor->status !== 'active') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Doctor account is not approved',
+                ], 403);
+            }
+            
 
             $token = $doctor->createToken(PersonalAccessTokenLabel::make(
                 (string) $doctor->full_name,

@@ -21,7 +21,7 @@ class MeetingController extends BaseMedicalRepController
             return $rep;
         }
 
-        $query = Meeting::where('rep_id', $rep->id)->with('doctor:id,full_name,email');
+        $query = Meeting::where('rep_id', $rep->id)->with(['doctor:id,full_name,email', 'rep:id,full_name,email']);
         if ($request->filled('status')) {
             $query->where('status', $request->string('status'));
         }
@@ -60,7 +60,7 @@ class MeetingController extends BaseMedicalRepController
             'status' => 'pending',
         ]);
 
-        return $this->success(['meeting' => $meeting], null, 201);
+        return $this->success(['meeting' => $meeting->load(['doctor:id,full_name,email', 'rep:id,full_name,email'])], null, 201);
     }
 
 
@@ -71,7 +71,7 @@ class MeetingController extends BaseMedicalRepController
             return $meeting;
         }
 
-        return $this->success(['meeting' => $meeting->load('doctor:id,full_name,email')]);
+        return $this->success(['meeting' => $meeting->load(['doctor:id,full_name,email', 'rep:id,full_name,email'])]);
     }
 
 
@@ -96,7 +96,7 @@ class MeetingController extends BaseMedicalRepController
 
         broadcast(new PointsEarned($point->load('doctor')))->toOthers();
 
-        return $this->success(['meeting' => $meeting->fresh()], 'Meeting completed');
+        return $this->success(['meeting' => $meeting->fresh()->load(['doctor:id,full_name,email,phone', 'rep:id,full_name,email,phone'])], 'Meeting completed');
     }
 
 
@@ -111,7 +111,7 @@ class MeetingController extends BaseMedicalRepController
         }
 
         $meeting->update(['status' => 'cancelled']);
-        return $this->success(['meeting' => $meeting->fresh()], 'Meeting cancelled');
+        return $this->success(['meeting' => $meeting->fresh()->load(['doctor:id,full_name,email,phone', 'rep:id,full_name,email,phone'])], 'Meeting cancelled');
     }
 
 
@@ -125,7 +125,7 @@ class MeetingController extends BaseMedicalRepController
         }
 
         $meeting->update(['status' => 'scheduled']);
-        return $this->success(['meeting' => $meeting->fresh()], 'Meeting approved');
+        return $this->success(['meeting' => $meeting->fresh()->load(['doctor:id,full_name,email,phone', 'rep:id,full_name,email,phone'])], 'Meeting approved');
     }
 
     public function reject(int $id): JsonResponse
@@ -138,7 +138,7 @@ class MeetingController extends BaseMedicalRepController
         }
 
         $meeting->update(['status' => 'rejected']);
-        return $this->success(['meeting' => $meeting->fresh()], 'Meeting rejected');
+        return $this->success(['meeting' => $meeting->fresh()->load(['doctor:id,full_name,email,phone', 'rep:id,full_name,email,phone'])], 'Meeting rejected');
     }
 
     private function ownedMeeting(int $id): Meeting|JsonResponse

@@ -15,7 +15,7 @@ abstract class BaseCompanyController extends Controller
             return $this->error('Unauthenticated', 401);
         }
 
-        if ((string) $company->status !== 'approved') {
+        if ((string) $company->status !== 'active') {
             return $this->error('Company account is not approved', 403);
         }
 

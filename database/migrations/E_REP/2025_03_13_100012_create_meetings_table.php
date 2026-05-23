@@ -16,6 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('doctor_id');
             $table->unsignedBigInteger('rep_id');
             $table->dateTime('scheduled_at')->index();
+            $table->string('status')->default('pending'); 
+            $table->string('type')->default('Online');    
+            $table->text('notes')->nullable();  
             $table->unsignedInteger('points_awarded')->nullable();
             $table->timestamps();
 

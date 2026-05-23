@@ -2088,28 +2088,6 @@ Changes doctor password after verifying current password.
 
 ---
 
-### Doctor meeting video room
-
-- **Method:** `GET`
-- **URL:** `/api/doctor/meetings/{id}/video-room`
-- **Auth:** Yes — Doctor
-
-**Success (200):**
-
-```json
-{
-    "success": true,
-    "data": {
-        "room_url": "https://meet.jit.si/erep-1-abc123",
-        "room_name": "erep-1-abc123"
-    }
-}
-```
-
-**Errors:** `401`, `403`, `404`.
-
----
-
 ### Doctor list events
 
 - **Method:** `GET`
@@ -2614,32 +2592,6 @@ Changes rep password after verifying current password.
 
 ---
 
-### Rep point transactions
-
-- **Method:** `GET`
-- **URL:** `/api/rep/points`
-- **Auth:** Yes — Rep
-
-Returns point ledger rows for the authenticated rep (`point_transactions` with `pointable_type` = `medical_rep` and `pointable_id` = rep id), newest first.
-
-**Success (200):** `{ "success": true, "data": { "points": [] } }`
-
-**Errors:** `401`.
-
----
-
-### Rep points total
-
-- **Method:** `GET`
-- **URL:** `/api/rep/points/total`
-- **Auth:** Yes — Rep
-
-**Success (200):** `{ "success": true, "data": { "total": 0 } }` — sum of `points` for that rep’s transactions.
-
-**Errors:** `401`.
-
----
-
 ### Rep list assigned doctors
 
 - **Method:** `GET`
@@ -2747,18 +2699,6 @@ Returns point ledger rows for the authenticated rep (`point_transactions` with `
 **Success (200):** `{ "success": true, "data": { "meeting": { "status": "cancelled" } } }`
 
 **Errors:** `401`, `404`, `422`.
-
----
-
-### Rep meeting video room
-
-- **Method:** `GET`
-- **URL:** `/api/rep/meetings/{id}/video-room`
-- **Auth:** Yes — Rep
-
-**Success (200):** `{ "success": true, "data": { "room_url": "https://meet.jit.si/...", "room_name": "..." } }`
-
-**Errors:** `401`, `403`, `404`.
 
 ---
 

@@ -65,12 +65,13 @@ class EventRequestController extends Controller
             'status'    => 'pending',
         ]);
 
-        if ($event->points_required) {
+        if (!is_null($event->points_required) && $event->points_required > 0) {
             DoctorPoint::create([
-                'doctor_id' => $doctorId,
-                'source'    => 'event',
-                'source_id' => $event->id,
-                'value'     => - ((int) $event->points_required),
+                'doctor_id'   => $doctorId,
+                'source'      => 'event',
+                'source_id'   => $event->id,
+                'value'       => - ((int) $event->points_required),
+                'description' => 'Points deducted for event registration',
             ]);
         }
 

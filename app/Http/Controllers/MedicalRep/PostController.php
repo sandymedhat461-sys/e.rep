@@ -300,6 +300,7 @@ class PostController extends BaseMedicalRepController
             'sharer_id' => $request->user()->id,
             'sharer_type' => 'rep',
         ]);
+        Post::whereKey($id)->increment('shares_count');
 
         return $this->success([], 'Post shared', 201);
     }

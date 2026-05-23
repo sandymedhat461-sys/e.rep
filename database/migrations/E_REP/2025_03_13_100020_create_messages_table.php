@@ -13,17 +13,15 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->string('sender_type'); // doctor, rep
+            $table->string('sender_type');
             $table->unsignedBigInteger('sender_id');
-            $table->unsignedBigInteger('receiver_doctor_id')->nullable();
-            $table->unsignedBigInteger('receiver_rep_id')->nullable();
-            $table->text('content');
-            $table->boolean('read_status')->default(false);
+            $table->unsignedBigInteger('receiver_id');
+            $table->string('receiver_type');
+            $table->text('body');
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
-
-            $table->foreign('receiver_doctor_id')->references('id')->on('doctors')->onDelete('cascade');
-            $table->foreign('receiver_rep_id')->references('id')->on('medical_reps')->onDelete('cascade');
             $table->index(['sender_type', 'sender_id']);
+            $table->index(['receiver_type', 'receiver_id']);
         });
     }
 

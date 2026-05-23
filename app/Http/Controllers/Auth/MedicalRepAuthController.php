@@ -107,6 +107,13 @@ class MedicalRepAuthController extends Controller
                 ], 403);
             }
 
+            if ($rep->status !== 'active') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Rep account is not approved',
+                ], 403);
+            }
+
             $token = $rep->createToken(PersonalAccessTokenLabel::make(
                 (string) $rep->full_name,
                 PersonalAccessTokenLabel::ROLE_MEDICAL_REP
