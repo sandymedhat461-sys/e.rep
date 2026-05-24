@@ -43,13 +43,6 @@ class DrugReviewController extends Controller
         }
 
         $doctorId = (int) $request->user()->id;
-        $alreadyReviewed = DrugReview::where('drug_id', $drugId)
-            ->where('doctor_id', $doctorId)
-            ->exists();
-
-        if ($alreadyReviewed) {
-            return $this->error('You already reviewed this drug', 422);
-        }
 
         $review = DrugReview::create([
             'drug_id' => $drugId,

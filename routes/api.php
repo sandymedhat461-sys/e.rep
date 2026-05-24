@@ -26,6 +26,7 @@ use App\Http\Controllers\Doctor\PostLikeController;
 use App\Http\Controllers\Doctor\ProfileController as DoctorProfileController;
 use App\Http\Controllers\Company\ActiveIngredientController as CompanyActiveIngredientController;
 use App\Http\Controllers\Company\DrugController as CompanyDrugController;
+use App\Http\Controllers\Company\DrugReviewController as CompanyDrugReviewController;
 use App\Http\Controllers\Company\EventController as CompanyEventController;
 use App\Http\Controllers\Company\EventInvitationController as CompanyEventInvitationController;
 use App\Http\Controllers\Company\EventRequestController as CompanyEventRequestController;
@@ -192,6 +193,8 @@ Route::prefix('company')->middleware('auth:company-api')->group(function () {
     Route::put('/drugs/{id}', [CompanyDrugController::class, 'update']);
     Route::delete('/drugs/{id}', [CompanyDrugController::class, 'destroy']);
 
+    Route::get('/drugs/{drugId}/reviews', [CompanyDrugReviewController::class, 'index']);
+
     Route::get('/events', [CompanyEventController::class, 'index']);
     Route::post('/events', [CompanyEventController::class, 'store']);
     Route::get('/events/{id}', [CompanyEventController::class, 'show']);
@@ -209,6 +212,7 @@ Route::prefix('company')->middleware('auth:company-api')->group(function () {
     Route::get('/reps/{id}', [CompanyMedicalRepController::class, 'show']);
     Route::post('/reps/{id}/targets', [CompanyMedicalRepController::class, 'upsertTarget']);
     Route::get('/reps/{id}/targets', [CompanyMedicalRepController::class, 'targets']);
+    Route::get('/doctors', [\App\Http\Controllers\Company\DoctorController::class, 'index']);
     Route::get('/report/generate', [CompanyReportController::class, 'generate']);
 
     Route::get('/posts', [CompanyPostController::class, 'index']);

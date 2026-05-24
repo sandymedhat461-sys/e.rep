@@ -48,7 +48,7 @@ class DashboardController extends Controller
             ],
             'companies' => [
                 'total' => Company::count(),
-                'approved' => Company::where('status', 'approved')->count(),
+                'approved' => Company::where('status', 'active')->count(),
                 'pending' => Company::where('status', 'pending')->count(),
                 'blocked' => Company::where('status', 'blocked')->count(),
             ],
