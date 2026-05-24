@@ -53,6 +53,18 @@ use App\Http\Controllers\MedicalRep\TargetController as MedicalRepTargetControll
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/image/{path}', function (string $path) {
+    $fullPath = storage_path('app/public/' . $path);
+
+    if (!file_exists($fullPath)) {
+        return response()->json(['message' => 'Image not found'], 404);
+    }
+
+    return response()->file($fullPath, [
+        'Access-Control-Allow-Origin' => '*',
+    ]);
+})->where('path', '.*');
+
 Route::prefix('auth')->group(function () {
     Route::post('/admin/register', [AdminAuthController::class, 'register']);
     Route::post('/admin/login', [AdminAuthController::class, 'login']);
