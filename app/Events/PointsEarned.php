@@ -9,10 +9,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-/**
- * Fired when a doctor earns points; broadcast to the doctor's private channel.
- * Pass a DoctorPoint with `doctor` loaded if consumers need the relationship.
- */
+// cspell:ignore Dispatchable InteractsWithSockets SerializesModels
 class PointsEarned implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;

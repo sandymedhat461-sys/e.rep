@@ -247,7 +247,7 @@ class PostController extends BaseMedicalRepController
 
         $like->delete();
         Post::whereKey($postId)->decrement('likes_count');
-        return $this->success([], 'Post unliked');
+        return $this->success([], 'Post unlike');
     }
 
     public function report(Request $request, int $id): JsonResponse

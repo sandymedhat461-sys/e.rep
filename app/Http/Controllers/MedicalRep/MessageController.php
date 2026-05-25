@@ -97,7 +97,7 @@ class MessageController extends BaseMedicalRepController
 
         $repTypes = ['medical_rep', 'MedicalRep', 'rep', 'App\\Models\\MedicalRep'];
 
-        // Get all messages involving this rep
+       
         $messages = Message::query()
             ->where(function ($q) use ($rep, $repTypes) {
                 $q->where(function ($inner) use ($rep, $repTypes) {
@@ -110,7 +110,7 @@ class MessageController extends BaseMedicalRepController
             ->orderByDesc('created_at')
             ->get();
 
-        // Group by partner (the other person's id, always a doctor here)
+   
         $conversations = $messages->groupBy(function ($msg) use ($rep, $repTypes) {
             $isSender = in_array($msg->sender_type, $repTypes) && $msg->sender_id == $rep->id;
             return 'doctor_' . ($isSender ? $msg->receiver_id : $msg->sender_id);
@@ -140,13 +140,13 @@ class MessageController extends BaseMedicalRepController
 
         $messages = Message::query()
             ->where(function ($q) use ($rep, $repTypes, $partnerId) {
-                // rep → doctor
+                
                 $q->where(function ($inner) use ($rep, $repTypes, $partnerId) {
                     $inner->where('sender_id', $rep->id)
                         ->whereIn('sender_type', $repTypes)
                         ->where('receiver_id', $partnerId)
                         ->where('receiver_type', 'doctor');
-                    // doctor → rep
+                    
                 })->orWhere(function ($inner) use ($rep, $repTypes, $partnerId) {
                     $inner->where('sender_id', $partnerId)
                         ->where('sender_type', 'doctor')

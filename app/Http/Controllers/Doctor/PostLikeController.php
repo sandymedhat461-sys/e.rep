@@ -56,6 +56,6 @@ class PostLikeController extends Controller
             $post->decrement('likes_count');
         }
 
-        return $this->success([], 'Post unliked');
+        return $this->success([], 'Post unlike');
     }
 }

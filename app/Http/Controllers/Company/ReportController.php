@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Drug;
 use App\Models\Event;
 use App\Models\MedicalRep;
+// cspell:ignore Barryvdh
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +34,7 @@ class ReportController extends Controller
 
         $pdf = Pdf::loadView('pdf.company_report', $data);
 
-        return $pdf->download('erep-company-report-' . $company->id . '.pdf');
+      
+        return $pdf->download('e-rep-company-report-' . $company->id . '.pdf');
     }
 }

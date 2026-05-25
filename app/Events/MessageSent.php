@@ -18,6 +18,7 @@ use Illuminate\Queue\SerializesModels;
  */
 class MessageSent implements ShouldBroadcast
 {
+    // cspell:ignore Dispatchable InteractsWithSockets SerializesModels
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(public Message $message)

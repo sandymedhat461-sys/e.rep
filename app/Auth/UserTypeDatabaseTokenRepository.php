@@ -4,12 +4,14 @@ namespace App\Auth;
 
 use Illuminate\Auth\Passwords\DatabaseTokenRepository;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Contracts\Hashing\Hasher as HasherContract;
+use Illuminate\Database\ConnectionInterface;
 
 class UserTypeDatabaseTokenRepository extends DatabaseTokenRepository
 {
     public function __construct(
-        $connection,
-        $hasher,
+        ConnectionInterface $connection,
+        HasherContract $hasher,
         string $table,
         string $hashKey,
         int $expires = 3600,

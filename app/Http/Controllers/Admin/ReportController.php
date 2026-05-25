@@ -11,6 +11,7 @@ use App\Models\Event;
 use App\Models\Meeting;
 use App\Models\MedicalRep;
 use App\Models\Post;
+// cspell:ignore Barryvdh
 use Barryvdh\DomPDF\Facade\Pdf;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,6 +42,6 @@ class ReportController extends Controller
 
         $pdf = Pdf::loadView('pdf.admin_report', $data);
 
-        return $pdf->download('erep-admin-report.pdf');
+        return $pdf->download('e-rep-admin-report.pdf');
     }
 }

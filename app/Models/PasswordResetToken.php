@@ -12,7 +12,7 @@ class PasswordResetToken extends Model
 
     protected $keyType = 'string';
 
-    /** Table has composite primary key (email, user_type) in DB. Use where() for lookups by both. */
+   
     protected $primaryKey = 'email';
 
     public $timestamps = false;

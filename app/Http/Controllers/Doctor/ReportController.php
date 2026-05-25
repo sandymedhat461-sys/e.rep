@@ -7,6 +7,7 @@ use App\Models\DoctorPoint;
 use App\Models\DrugSample;
 use App\Models\EventRequest;
 use App\Models\Meeting;
+// cspell:ignore Barryvdh
 use Barryvdh\DomPDF\Facade\Pdf;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,6 +39,6 @@ class ReportController extends Controller
 
         $pdf = Pdf::loadView('pdf.doctor_report', $data);
 
-        return $pdf->download('erep-report-' . $doctor->id . '.pdf');
+        return $pdf->download('e-rep-report-' . $doctor->id . '.pdf');
     }
 }
