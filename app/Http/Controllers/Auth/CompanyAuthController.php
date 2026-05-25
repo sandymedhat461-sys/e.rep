@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Auth\Concerns\ResetsPasswords;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Support\PersonalAccessTokenLabel;
@@ -13,6 +14,13 @@ use Throwable;
 
 class CompanyAuthController extends Controller
 {
+    use ResetsPasswords;
+
+    protected function passwordBroker(): string
+    {
+        return 'company';
+    }
+
    
     public function register(Request $request): JsonResponse
     {

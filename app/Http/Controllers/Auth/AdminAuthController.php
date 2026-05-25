@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Auth\Concerns\ResetsPasswords;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Support\PersonalAccessTokenLabel;
@@ -14,6 +15,13 @@ use Throwable;
 
 class AdminAuthController extends Controller
 {
+    use ResetsPasswords;
+
+    protected function passwordBroker(): string
+    {
+        return 'admin';
+    }
+
 
     #[OA\Post(
         path: '/api/auth/admin/register',

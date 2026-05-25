@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Auth\Concerns\ResetsPasswords;
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
 use App\Support\PersonalAccessTokenLabel;
@@ -13,6 +14,13 @@ use Throwable;
 
 class DoctorAuthController extends Controller
 {
+    use ResetsPasswords;
+
+    protected function passwordBroker(): string
+    {
+        return 'doctor';
+    }
+
  
     public function register(Request $request): JsonResponse
     {

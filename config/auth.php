@@ -75,6 +75,38 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
+        'admin' => [
+            'provider' => 'admins',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+            'user_type' => 'admin',
+        ],
+
+        'company' => [
+            'provider' => 'companies',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+            'user_type' => 'company',
+        ],
+
+        'doctor' => [
+            'provider' => 'doctors',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+            'user_type' => 'doctor',
+        ],
+
+        'rep' => [
+            'provider' => 'reps',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+            'user_type' => 'medical_rep',
+        ],
     ],
 
     
