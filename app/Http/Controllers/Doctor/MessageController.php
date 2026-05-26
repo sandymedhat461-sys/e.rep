@@ -76,7 +76,6 @@ class MessageController extends Controller
     {
         $doctorId = (int) $request->user()->id;
         $doctorTypes = ['doctor', 'Doctor', 'App\\Models\\Doctor'];
-        dd(\App\Models\MedicalRep::all());
 
         $messages = Message::query()
             ->where(function ($q) use ($doctorId, $doctorTypes) {

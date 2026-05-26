@@ -32,6 +32,7 @@ class MedicalRepAuthController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'company_id' => ['required', 'exists:companies,id'],
             'company_name' => ['required', 'string', 'max:255'],
+            'category_id' => ['required', 'exists:drug_categories,id'],
             'profile_image' => ['nullable', 'image', 'max:2048'],
             'company_id_image' => ['required', 'image', 'max:2048'],
         ]);

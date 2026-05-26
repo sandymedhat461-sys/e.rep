@@ -288,7 +288,7 @@ class PostController extends BaseMedicalRepController
 
         $alreadyShared = PostShare::where('post_id', $id)
             ->where('sharer_id', $request->user()->id)
-            ->where('sharer_type', 'rep')
+            ->where('sharer_type', 'medical_rep')
             ->exists();
 
         if ($alreadyShared) {
@@ -298,7 +298,7 @@ class PostController extends BaseMedicalRepController
         PostShare::create([
             'post_id' => $id,
             'sharer_id' => $request->user()->id,
-            'sharer_type' => 'rep',
+            'sharer_type' => 'medical_rep',
         ]);
         Post::whereKey($id)->increment('shares_count');
 
