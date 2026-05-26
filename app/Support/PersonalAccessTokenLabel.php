@@ -12,7 +12,7 @@ final class PersonalAccessTokenLabel
 
     public const ROLE_MEDICAL_REP = 'medical rep';
 
-    public static function make(string $displayName, string $role): string
+    public static function make(string $displayName): string
     {
         $name = trim($displayName);
 

@@ -124,8 +124,7 @@ class MedicalRepAuthController extends Controller
             }
 
             $token = $rep->createToken(PersonalAccessTokenLabel::make(
-                (string) $rep->full_name,
-                PersonalAccessTokenLabel::ROLE_MEDICAL_REP
+                (string) $rep->full_name
             ))->plainTextToken;
 
             return response()->json([

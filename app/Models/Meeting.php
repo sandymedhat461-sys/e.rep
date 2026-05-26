@@ -35,9 +35,4 @@ class Meeting extends Model
     {
         return $this->belongsTo(MedicalRep::class, 'rep_id');
     }
-
-    public function medicalRep(): BelongsTo
-    {
-        return $this->belongsTo(MedicalRep::class, 'rep_id');
-    }
 }

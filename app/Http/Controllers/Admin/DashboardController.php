@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\Doctor;
 use App\Models\Drug;
-use App\Models\DrugSampleRequest;
+use App\Models\DrugSample;
 use App\Models\Event;
 use App\Models\Meeting;
 use App\Models\MedicalRep;
@@ -62,9 +62,9 @@ class DashboardController extends Controller
                 'cancelled' => Meeting::where('status', 'cancelled')->count(),
             ],
             'samples' => [
-                'total' => DrugSampleRequest::count(),
-                'pending' => DrugSampleRequest::where('status', 'pending')->count(),
-                'delivered' => DrugSampleRequest::where('status', 'delivered')->count(),
+                'total' => DrugSample::count(),
+                'pending' => DrugSample::where('status', 'pending')->count(),
+                'delivered' => DrugSample::where('status', 'delivered')->count(),
             ],
             'events' => [
                 'total' => Event::count(),

@@ -48,8 +48,7 @@ class AdminAuthController extends Controller
         try {
             $admin = Admin::create($validator->validated());
             $token = $admin->createToken(PersonalAccessTokenLabel::make(
-                (string) $admin->full_name,
-                PersonalAccessTokenLabel::ROLE_ADMIN
+                (string) $admin->full_name
             ))->plainTextToken;
 
             return response()->json([
@@ -94,8 +93,7 @@ class AdminAuthController extends Controller
             }
 
             $token = $admin->createToken(PersonalAccessTokenLabel::make(
-                (string) $admin->full_name,
-                PersonalAccessTokenLabel::ROLE_ADMIN
+                (string) $admin->full_name
             ))->plainTextToken;
 
             return response()->json([

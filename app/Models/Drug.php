@@ -66,12 +66,6 @@ class Drug extends Model
     {
         return $this->hasMany(RepDrugAssignment::class);
     }
-
-    public function repAssignments(): HasMany
-    {
-        return $this->hasMany(\App\Models\RepDrugAssignment::class, 'drug_id');
-    }
-
     public function activeIngredients(): BelongsToMany
     {
         return $this->belongsToMany(ActiveIngredient::class, 'drug_ingredients', 'drug_id', 'ingredient_id');

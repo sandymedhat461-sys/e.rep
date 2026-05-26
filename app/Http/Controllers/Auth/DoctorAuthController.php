@@ -124,8 +124,7 @@ class DoctorAuthController extends Controller
             
 
             $token = $doctor->createToken(PersonalAccessTokenLabel::make(
-                (string) $doctor->full_name,
-                PersonalAccessTokenLabel::ROLE_DOCTOR
+                (string) $doctor->full_name
             ))->plainTextToken;
 
             return response()->json([

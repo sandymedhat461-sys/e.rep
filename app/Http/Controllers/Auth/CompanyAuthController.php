@@ -28,7 +28,7 @@ class CompanyAuthController extends Controller
             'company_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:companies,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'hotline' => ['required', 'string', 'max:5'],
+            'hotline' => ['required', 'string', 'max:20'],
             'commercial_register' => ['required', 'string', 'max:100'],
             'company_profile_image' => ['nullable', 'image', 'max:2048'],
             'company_id_image' => ['required', 'image', 'max:2048'],
@@ -121,8 +121,7 @@ class CompanyAuthController extends Controller
             }
 
             $token = $company->createToken(PersonalAccessTokenLabel::make(
-                (string) $company->company_name,
-                PersonalAccessTokenLabel::ROLE_COMPANY
+                (string) $company->company_name
             ))->plainTextToken;
 
             return response()->json([
