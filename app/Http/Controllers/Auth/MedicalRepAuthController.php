@@ -27,7 +27,7 @@ class MedicalRepAuthController extends Controller
         $validator = Validator::make($request->all(), [
             'full_name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:11'],
-            'national_id' => ['required', 'string', 'max:14', 'unique:medical_reps,national_id'],
+            'national_id' => ['required', 'string', 'digits:14', 'unique:medical_reps,national_id'],
             'email' => ['required', 'email', 'unique:medical_reps,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'company_id' => ['required', 'exists:companies,id'],
