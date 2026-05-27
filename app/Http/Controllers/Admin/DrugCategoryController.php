@@ -13,10 +13,6 @@ class DrugCategoryController extends Controller
 
     public function index(): JsonResponse
     {
-        if (!auth('admin-api')->user()) {
-            return $this->error('Unauthenticated', 401);
-        }
-
         $categories = DrugCategory::query()->orderBy('name')->get();
 
         return $this->success(['categories' => $categories]);
@@ -25,10 +21,6 @@ class DrugCategoryController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        if (!auth('admin-api')->user()) {
-            return $this->error('Unauthenticated', 401);
-        }
-
         $validated = $this->validateRequest($request, [
             'name' => ['required', 'string', 'max:255'],
         ]);
@@ -44,10 +36,6 @@ class DrugCategoryController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        if (!auth('admin-api')->user()) {
-            return $this->error('Unauthenticated', 401);
-        }
-
         $category = DrugCategory::find($id);
         if (!$category) {
             return $this->error('Category not found', 404);
@@ -68,10 +56,6 @@ class DrugCategoryController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        if (!auth('admin-api')->user()) {
-            return $this->error('Unauthenticated', 401);
-        }
-
         $category = DrugCategory::find($id);
         if (!$category) {
             return $this->error('Category not found', 404);

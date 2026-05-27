@@ -16,7 +16,7 @@ class PostController extends Controller
     public function index(): JsonResponse
     {
         $posts = Post::query()
-            // ->where('status', 'published')
+            ->where('status', 'published')
             ->with('author')
             ->orderByDesc('created_at')
             ->paginate(15);

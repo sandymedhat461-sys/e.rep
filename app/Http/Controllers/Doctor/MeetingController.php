@@ -85,7 +85,7 @@ class MeetingController extends Controller
         $validated = $this->validateRequest($request, [
             'rep_id' => ['required', 'exists:medical_reps,id'],
             'date'   => ['required', 'date'],
-            'time'   => ['required', 'string'],
+            'time'   => ['required', 'date_format:H:i'],
             'type'   => ['required', 'in:Online,Offline'],
             'notes'  => ['nullable', 'string', 'max:5000'],
         ]);

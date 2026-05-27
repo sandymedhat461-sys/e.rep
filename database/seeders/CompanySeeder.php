@@ -14,7 +14,7 @@ class CompanySeeder extends Seeder
             [
                 'company_name' => 'Pharma Egypt Co.',
                 'password' => 'password123',
-                'status' => 'approved',
+                'status' => 'active',
                 'commercial_register' => 'CREG-EGY-2025-001',
             ]
         );
@@ -24,7 +24,7 @@ class CompanySeeder extends Seeder
             [
                 'company_name' => 'MedCare Solutions',
                 'password' => 'password123',
-                'status' => 'approved',
+                'status' => 'active',
                 'commercial_register' => 'CREG-EGY-2025-002',
             ]
         );

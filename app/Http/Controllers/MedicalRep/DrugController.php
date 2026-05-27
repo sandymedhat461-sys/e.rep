@@ -16,7 +16,7 @@ class DrugController extends BaseMedicalRepController
         }
 
         $drugs = Drug::with(['category', 'ingredients'])
-            ->whereHas('repAssignments', function ($q) use ($rep) {
+            ->whereHas('repDrugAssignments', function ($q) use ($rep) {
                 $q->where('rep_id', $rep->id);
             })
             ->where('status', 'active')

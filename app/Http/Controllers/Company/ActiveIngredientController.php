@@ -37,7 +37,10 @@ class ActiveIngredientController extends BaseCompanyController
             return $validated;
         }
 
-        $ingredient = ActiveIngredient::create($validated);
+        $ingredient = ActiveIngredient::create([
+            ...$validated,
+            'created_by_company_id' => $company->id,
+        ]);
 
         return $this->success(['ingredient' => $ingredient], null, 201);
     }

@@ -81,6 +81,9 @@ class MeetingController extends BaseMedicalRepController
         if ($meeting instanceof JsonResponse) {
             return $meeting;
         }
+        if ($meeting->status !== 'scheduled') {
+            return $this->error('Only scheduled meetings can be completed', 422);
+        }
 
         $point = DB::transaction(function () use ($meeting) {
             $meeting->update(['status' => 'completed', 'points_awarded' => 10]);
