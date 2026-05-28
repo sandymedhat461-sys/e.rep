@@ -6,16 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
     public function up(): void
     {
         Schema::create('drug_reviews', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('drug_id');
             $table->unsignedBigInteger('doctor_id');
-            $table->unsignedTinyInteger('rating'); // 1-5 scale
+            $table->unsignedTinyInteger('rating'); 
             $table->text('comment')->nullable();
             $table->timestamps();
 
@@ -24,9 +22,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('drug_reviews');
