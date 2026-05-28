@@ -178,10 +178,10 @@ Route::prefix('doctor')->middleware('auth:doctor-api')->group(function () {
     Route::post('/posts/{postId}/like', [PostLikeController::class, 'store']);
     Route::delete('/posts/{postId}/unlike', [PostLikeController::class, 'destroy']);
 
-    Route::get('/messages', [MessageController::class, 'index']);
-    Route::post('/messages', [MessageController::class, 'store']);
     Route::get('/messages/conversations', [MessageController::class, 'conversations']);
     Route::get('/messages/conversation/{partnerId}', [MessageController::class, 'conversation']);
+    Route::get('/messages', [MessageController::class, 'index']);
+    Route::post('/messages', [MessageController::class, 'store']);
     Route::post('/messages/{id}/read', [MessageController::class, 'markAsRead']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
@@ -296,10 +296,10 @@ Route::prefix('rep')->middleware('auth:rep-api')->group(function () {
     Route::post('/posts/{id}/like', [MedicalRepPostController::class, 'like']);
     Route::delete('/posts/{id}/like', [MedicalRepPostController::class, 'unlike']);
 
-    Route::get('/messages', [MedicalRepMessageController::class, 'index']);
-    Route::post('/messages', [MedicalRepMessageController::class, 'store']);
     Route::get('/messages/conversations', [MedicalRepMessageController::class, 'conversations']);
     Route::get('/messages/conversation/{partnerId}', [MedicalRepMessageController::class, 'conversation']);
+    Route::get('/messages', [MedicalRepMessageController::class, 'index']);
+    Route::post('/messages', [MedicalRepMessageController::class, 'store']);
     Route::post('/messages/{id}/read', [MedicalRepMessageController::class, 'markAsRead']);
 
     Route::get('/notifications', [MedicalRepNotificationController::class, 'index']);

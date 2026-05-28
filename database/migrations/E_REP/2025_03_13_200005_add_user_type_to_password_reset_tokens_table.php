@@ -12,6 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('password_reset_tokens', 'user_type')) {
+            return;
+        }
+
         Schema::table('password_reset_tokens', function (Blueprint $table) {
             $table->dropPrimary(['email']);
             $table->enum('user_type', ['doctor', 'medical_rep', 'admin', 'company'])
