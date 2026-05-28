@@ -36,24 +36,31 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         $this->app->booted(function () {
-            $this->app->make('migrator')->path(database_path('migrations'.DIRECTORY_SEPARATOR.'E_REP'));
+            $this->app->make('migrator')->path(database_path('migrations' . DIRECTORY_SEPARATOR . 'E_REP'));
         });
 
         ResetPassword::createUrlUsing(function ($notifiable, string $token) {
-            $role = match ($notifiable::class) {
-                Admin::class => 'admin',
-                Company::class => 'company',
-                Doctor::class => 'doctor',
-                MedicalRep::class => 'rep',
-                default => 'user',
-            };
+            $role = $this->getBrokerPrefix($notifiable);
+            $frontendUrl = rtrim((string) config('app.frontend_url'), '/');
 
-            $baseUrl = rtrim((string) config('app.url'), '/');
-
-            return $baseUrl.'/reset-password/'.$role.'?'.http_build_query([
+            return $frontendUrl . '/reset-password/' . $role . '?' . http_build_query([
                 'token' => $token,
                 'email' => $notifiable->getEmailForPasswordReset(),
             ]);
         });
+    }
+
+    /**
+     * Get the broker prefix based on the notifiable model type.
+     */
+    private function getBrokerPrefix($notifiable): string
+    {
+        return match ($notifiable::class) {
+            Admin::class => 'admin',
+            Doctor::class => 'doctor',
+            MedicalRep::class => 'rep',
+            Company::class => 'company',
+            default => 'user',
+        };
     }
 }

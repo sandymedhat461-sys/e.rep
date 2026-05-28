@@ -32,9 +32,19 @@ class AdminAuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'full_name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:11'],
+            'phone' => ['required', 'string', 'digits:11'],
             'email' => ['required', 'email', 'unique:admins,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'full_name.required'  => 'Please enter your full name',
+            'phone.required'      => 'Please enter your phone number',
+            'phone.digits'        => 'Phone number must be exactly 11 digits',
+            'email.required'      => 'Please enter your email address',
+            'email.email'         => 'Please enter a valid email address',
+            'email.unique'        => 'This email is already registered',
+            'password.required'   => 'Please enter a password',
+            'password.min'        => 'Password must be at least 8 characters',
+            'password.confirmed'  => 'Passwords do not match',
         ]);
 
         if ($validator->fails()) {
@@ -71,6 +81,10 @@ class AdminAuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
+        ], [
+            'email.required'    => 'Please enter your email address',
+            'email.email'       => 'Please enter a valid email address',
+            'password.required' => 'Please enter your password',
         ]);
 
         if ($validator->fails()) {
@@ -88,7 +102,7 @@ class AdminAuthController extends Controller
             if (! $admin || ! Hash::check($data['password'], (string) $admin->password)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Invalid credentials',
+                    'message' => 'Invalid email or password. Please try again.',
                 ], 401);
             }
 

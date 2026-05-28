@@ -16,6 +16,9 @@ trait ResetsPasswords
     {
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'email'],
+        ], [
+            'email.required' => 'Please enter your email address',
+            'email.email'    => 'Please enter a valid email address',
         ]);
 
         if ($validator->fails()) {
@@ -56,6 +59,13 @@ trait ResetsPasswords
             'token' => ['required', 'string'],
             'email' => ['required', 'email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'token.required'     => 'Reset token is missing',
+            'email.required'     => 'Please enter your email address',
+            'email.email'        => 'Please enter a valid email address',
+            'password.required'  => 'Please enter a new password',
+            'password.min'       => 'Password must be at least 8 characters',
+            'password.confirmed' => 'Passwords do not match',
         ]);
 
         if ($validator->fails()) {

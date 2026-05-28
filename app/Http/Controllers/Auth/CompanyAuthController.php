@@ -21,7 +21,7 @@ class CompanyAuthController extends Controller
         return 'company';
     }
 
-   
+
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -32,6 +32,19 @@ class CompanyAuthController extends Controller
             'commercial_register' => ['required', 'string', 'max:100'],
             'company_profile_image' => ['nullable', 'image', 'max:2048'],
             'company_id_image' => ['required', 'image', 'max:2048'],
+        ], [
+            'company_name.required'         => 'Please enter your company name',
+            'email.required'                => 'Please enter your email address',
+            'email.email'                   => 'Please enter a valid email address',
+            'email.unique'                  => 'This email is already registered',
+            'password.required'             => 'Please enter a password',
+            'password.min'                  => 'Password must be at least 8 characters',
+            'password.confirmed'            => 'Passwords do not match',
+            'hotline.required'              => 'Please enter a hotline number',
+            'commercial_register.required'  => 'Please enter your commercial register number',
+            'company_id_image.required'     => 'Please upload your company ID image',
+            'company_id_image.image'        => 'Company ID file must be an image',
+            'company_id_image.max'          => 'Company ID image must not exceed 2MB',
         ]);
 
         if ($validator->fails()) {
@@ -72,12 +85,16 @@ class CompanyAuthController extends Controller
         }
     }
 
- 
+
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
+        ], [
+            'email.required'    => 'Please enter your email address',
+            'email.email'       => 'Please enter a valid email address',
+            'password.required' => 'Please enter your password',
         ]);
 
         if ($validator->fails()) {
@@ -95,7 +112,7 @@ class CompanyAuthController extends Controller
             if (! $company || ! Hash::check($data['password'], (string) $company->password)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Invalid credentials',
+                    'message' => 'Invalid email or password. Please try again.',
                 ], 401);
             }
 
@@ -139,7 +156,7 @@ class CompanyAuthController extends Controller
         }
     }
 
-  
+
     public function logout(Request $request): JsonResponse
     {
         $request->user()?->currentAccessToken()?->delete();
@@ -150,7 +167,7 @@ class CompanyAuthController extends Controller
         ]);
     }
 
-  
+
     public function me(Request $request): JsonResponse
     {
         return response()->json([

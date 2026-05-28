@@ -21,12 +21,12 @@ class DoctorAuthController extends Controller
         return 'doctor';
     }
 
- 
+
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'full_name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:11'],
+            'phone' => ['required', 'string', 'digits:11'],
             'national_id' => ['required', 'string', 'digits:14', 'unique:doctors,national_id'],
             'email' => ['required', 'email', 'unique:doctors,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
@@ -35,6 +35,28 @@ class DoctorAuthController extends Controller
             'syndicate_id' => ['required', 'string', 'unique:doctors,syndicate_id', 'min:5', 'max:20'],
             'profile_image' => ['nullable', 'image', 'max:2048'],
             'syndicate_id_image' => ['required', 'image', 'max:2048'],
+        ], [
+            'full_name.required'         => 'Please enter your full name',
+            'phone.required'             => 'Please enter your phone number',
+            'phone.digits'               => 'Phone number must be exactly 11 digits',
+            'national_id.required'       => 'Please enter your national ID',
+            'national_id.digits'         => 'National ID must be exactly 14 digits',
+            'national_id.unique'         => 'This national ID is already registered',
+            'email.required'             => 'Please enter your email address',
+            'email.email'                => 'Please enter a valid email address',
+            'email.unique'               => 'This email is already registered',
+            'password.required'          => 'Please enter a password',
+            'password.min'               => 'Password must be at least 8 characters',
+            'password.confirmed'         => 'Passwords do not match',
+            'specialization.required'    => 'Please enter your specialization',
+            'hospital_name.required'     => 'Please enter your hospital name',
+            'syndicate_id.required'      => 'Please enter your syndicate ID',
+            'syndicate_id.unique'        => 'This syndicate ID is already registered',
+            'syndicate_id.min'           => 'Syndicate ID must be at least 5 characters',
+            'syndicate_id.max'           => 'Syndicate ID must not exceed 20 characters',
+            'syndicate_id_image.required' => 'Please upload your syndicate ID image',
+            'syndicate_id_image.image'   => 'Syndicate ID file must be an image',
+            'syndicate_id_image.max'     => 'Syndicate ID image must not exceed 2MB',
         ]);
 
         if ($validator->fails()) {
@@ -75,12 +97,16 @@ class DoctorAuthController extends Controller
         }
     }
 
- 
+
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
+        ], [
+            'email.required'    => 'Please enter your email address',
+            'email.email'       => 'Please enter a valid email address',
+            'password.required' => 'Please enter your password',
         ]);
 
         if ($validator->fails()) {
@@ -98,7 +124,7 @@ class DoctorAuthController extends Controller
             if (! $doctor || ! Hash::check($data['password'], (string) $doctor->password)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Invalid credentials',
+                    'message' => 'Invalid email or password. Please try again.',
                 ], 401);
             }
 
@@ -121,7 +147,7 @@ class DoctorAuthController extends Controller
                     'message' => 'Doctor account is not approved',
                 ], 403);
             }
-            
+
 
             $token = $doctor->createToken(PersonalAccessTokenLabel::make(
                 (string) $doctor->full_name
@@ -142,7 +168,7 @@ class DoctorAuthController extends Controller
         }
     }
 
-  
+
     public function logout(Request $request): JsonResponse
     {
         $request->user()?->currentAccessToken()?->delete();
@@ -153,7 +179,7 @@ class DoctorAuthController extends Controller
         ]);
     }
 
-   
+
     public function me(Request $request): JsonResponse
     {
         return response()->json([
@@ -164,11 +190,13 @@ class DoctorAuthController extends Controller
         ]);
     }
 
-   
+
     public function checkSyndicateId(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'syndicate_id' => ['required', 'string'],
+        ], [
+            'syndicate_id.required' => 'Please enter your syndicate ID',
         ]);
 
         if ($validator->fails()) {

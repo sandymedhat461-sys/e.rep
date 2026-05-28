@@ -21,20 +21,38 @@ class MedicalRepAuthController extends Controller
         return 'rep';
     }
 
-   
+
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'full_name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:11'],
+            'phone' => ['required', 'string', 'digits:11'],
             'national_id' => ['required', 'string', 'digits:14', 'unique:medical_reps,national_id'],
             'email' => ['required', 'email', 'unique:medical_reps,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'company_id' => ['required', 'exists:companies,id'],
             'company_name' => ['required', 'string', 'max:255'],
-            'category_id' => ['required', 'exists:drug_categories,id'],
             'profile_image' => ['nullable', 'image', 'max:2048'],
             'company_id_image' => ['required', 'image', 'max:2048'],
+        ], [
+            'full_name.required'        => 'Please enter your full name',
+            'phone.required'            => 'Please enter your phone number',
+            'phone.digits'              => 'Phone number must be exactly 11 digits',
+            'national_id.required'      => 'Please enter your national ID',
+            'national_id.digits'        => 'National ID must be exactly 14 digits',
+            'national_id.unique'        => 'This national ID is already registered',
+            'email.required'            => 'Please enter your email address',
+            'email.email'               => 'Please enter a valid email address',
+            'email.unique'              => 'This email is already registered',
+            'password.required'         => 'Please enter a password',
+            'password.min'              => 'Password must be at least 8 characters',
+            'password.confirmed'        => 'Passwords do not match',
+            'company_id.required'       => 'Please select your company',
+            'company_id.exists'         => 'Selected company does not exist',
+            'company_name.required'     => 'Please enter your company name',
+            'company_id_image.required' => 'Please upload your company ID image',
+            'company_id_image.image'    => 'Company ID file must be an image',
+            'company_id_image.max'      => 'Company ID image must not exceed 2MB',
         ]);
 
         if ($validator->fails()) {
@@ -75,12 +93,16 @@ class MedicalRepAuthController extends Controller
         }
     }
 
-   
+
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
+        ], [
+            'email.required'    => 'Please enter your email address',
+            'email.email'       => 'Please enter a valid email address',
+            'password.required' => 'Please enter your password',
         ]);
 
         if ($validator->fails()) {
@@ -98,7 +120,7 @@ class MedicalRepAuthController extends Controller
             if (! $rep || ! Hash::check($data['password'], (string) $rep->password)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Invalid credentials',
+                    'message' => 'Invalid email or password. Please try again.',
                 ], 401);
             }
 
@@ -142,7 +164,7 @@ class MedicalRepAuthController extends Controller
         }
     }
 
-   
+
     public function logout(Request $request): JsonResponse
     {
         $request->user()?->currentAccessToken()?->delete();
@@ -153,7 +175,7 @@ class MedicalRepAuthController extends Controller
         ]);
     }
 
-   
+
     public function me(Request $request): JsonResponse
     {
         return response()->json([
