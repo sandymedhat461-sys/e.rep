@@ -117,10 +117,17 @@ class MedicalRepAuthController extends Controller
             $data = $validator->validated();
             $rep = MedicalRep::where('email', $data['email'])->first();
 
-            if (! $rep || ! Hash::check($data['password'], (string) $rep->password)) {
+            if (! $rep) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Invalid email or password. Please try again.',
+                    'message' => 'No account found with this email.',
+                ], 401);
+            }
+
+            if (! Hash::check($data['password'], (string) $rep->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Incorrect password. Please try again.',
                 ], 401);
             }
 

@@ -121,10 +121,17 @@ class DoctorAuthController extends Controller
             $data = $validator->validated();
             $doctor = Doctor::where('email', $data['email'])->first();
 
-            if (! $doctor || ! Hash::check($data['password'], (string) $doctor->password)) {
+            if (! $doctor) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Invalid email or password. Please try again.',
+                    'message' => 'No account found with this email.',
+                ], 401);
+            }
+
+            if (! Hash::check($data['password'], (string) $doctor->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Incorrect password. Please try again.',
                 ], 401);
             }
 

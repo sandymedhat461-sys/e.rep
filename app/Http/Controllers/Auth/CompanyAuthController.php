@@ -109,10 +109,17 @@ class CompanyAuthController extends Controller
             $data = $validator->validated();
             $company = Company::where('email', $data['email'])->first();
 
-            if (! $company || ! Hash::check($data['password'], (string) $company->password)) {
+            if (! $company) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Invalid email or password. Please try again.',
+                    'message' => 'No account found with this email.',
+                ], 401);
+            }
+
+            if (! Hash::check($data['password'], (string) $company->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Incorrect password. Please try again.',
                 ], 401);
             }
 
